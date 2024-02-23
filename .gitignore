@@ -1,0 +1,11 @@
+# Node.js
+/node_modules/
+
+# Composer
+/vendor/
+
+# Composer bin plugin
+/vendor-bin/**/vendor
+
+# WordPress
+/wordpress/

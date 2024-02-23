@@ -1,0 +1,212 @@
+swagger: '2.0'
+info:
+  version: '1.4.5'
+  title: Administration
+basePath: /xs2a/routingservice/services/authorize
+tags:
+  - name: Token Administration
+    description: ''
+paths: 
+  /token:
+    post:
+      tags:
+        - Token Administration
+      summary: Generates a token for the Initiating Party
+      operationId: handleTokenRequest
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: grant_type
+          in: formData
+          required: true
+          type: string
+          description: grant type for getting access token
+          default: client_credentials
+        - name: Authorization
+          in: header
+          description: 'The signature. It contains the header attributes app, client, id and date signed with the private key of the client.
+                        The signature should be built according to https://tools.ietf.org/html/draft-cavage-http-signatures-12'
+          required: true
+          type: string
+          default: >-
+            [Signature keyId='58AF4EC5ADD4C4A3F28D3AEFF60656B2F2xxxxxx',
+            algorithm='SHA256withRSA', headers='app client id date',
+            signature='Abczym2rZF...r5qcvgmA=='], app=[AIS], client=[TenantA], id=[000060], date=[Wed Mar 28 11:08:06 CEST2018]
+        - name: App
+          in: header
+          required: true
+          type: string
+          description: 'The application name. For example PIS or AIS'
+        - name: Client
+          in: header
+          required: true
+          type: string
+          description: 'The name of the client. This name is provided to the Initiating Party during onboarding. The name of the client is created by the Open Banking Service.'
+        - name: Id
+          in: header
+          required: true
+          type: string
+          description: 'The combination of Initiating Party ID and sub Id. For example if Initiating Party ID is 433 and the sub ID is 5 the ID will be 433:5
+                        IP=433, subId=5 -> 433:5
+                        IP=434, no subId -> 434'
+        - name: Date
+          in: header
+          required: true
+          type: string
+          description: 'Should be filled with the current date. ISO 8601 DateTime.
+                        example: "2020-09-25T08:15:00.856Z"'
+
+      responses:
+        '200':
+          description: Successful
+          schema:
+            $ref: '#/definitions/Token'
+        '401':
+          description: 'Not Authorized, Initiating Party is unknown or signature is wrong'
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /revoke:
+    post:
+      tags:
+        - Token Administration
+      summary: Revokes a token for the Initiating Party
+      operationId: revokeTokenRequest
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: token
+          in: formData
+          required: true
+          type: string
+          description: 'token to be revoked' 
+          default: token=<token_to_be_revoked>    
+        - name: Authorization
+          in: header
+          description: 'The signature. It contains the header attributes app, client, id and date signed with the private key of the client.
+                        The signature should be built according to https://tools.ietf.org/html/draft-cavage-http-signatures-12'
+          required: true
+          type: string
+          default: >-
+            [Signature keyId='58AF4EC5ADD4C4A3F28D3AEFF60656B2F2xxxxxx',
+            algorithm='SHA256withRSA', headers='app client id date',
+            signature='Cxamym2rZF...r5qcvgmA=='], app=[AIS], client=[TenantA], id=[000060], date=[Wed Mar 29 12:08:06 CEST2018]
+        - name: App
+          in: header
+          required: true
+          type: string
+          description: 'The application name. For example PIS or AIS'
+        - name: Client
+          in: header
+          required: true
+          type: string
+          description: 'The name of the client'
+        - name: Id
+          in: header
+          required: true
+          type: string
+          description: 'The combination of Initiating Party Id and sub Id.'
+        - name: Date
+          in: header
+          required: true
+          type: string
+          description: 'The current date. Example: Wed Mar 28 11:08:06 CEST 2020'
+      responses:
+        '200':
+          description: Successful
+        '401':
+          description: 'Not Authorized, Initiating Party is unknown or signature is wrong'
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/Error' 
+  
+definitions:
+  Token:
+    allOf:
+      - type: object
+        required:
+          - access_token
+          - token_type
+          - expires_in
+        properties:
+          access_token:
+            type: string
+          token_type:
+            type: string
+          expires_in:
+            type: integer
+            format: int32
+        description: Access token
+        xml:
+          name: Token
+          namespace: 'urn:eu:xs2a:xsd:v1'
+          
+  Error:
+    allOf:
+      - $ref: '#/definitions/MessageBody'
+      - type: object
+        required:
+          - code
+          - message
+        properties:
+          code:
+            type: string
+            pattern: '[0-9]{1,3}'
+          message:
+            type: string
+            minLength: 1
+            maxLength: 140
+          details:
+            type: string
+          link:
+            $ref: '#/definitions/LinkType'
+        description: >
+            |HTTP Status|Code |Description                           
+
+            |-----------|-----|---------------------------------------
+
+            |401        |001  |Missing mandatory header
+            |           |003  |Invalid signature
+            |           |007  |Initiating Party is not authorized
+            |           |101  |Initiating Party is unknown
+            |           |102  |Initiating Party is inactive
+            |500        |004  |An internal error occurred
+
+        xml:
+          name: Error
+          namespace: 'urn:eu:xs2a:xsd:v1'
+          
+  LinkType:
+    type: object
+    required:
+      - href
+    properties:
+      href:
+        type: string
+        minLength: 1
+        maxLength: 1024
+  MessageBody:
+    type: object
+    required:
+      - MessageCreateDateTime
+      - MessageId
+    discriminator: classType
+    properties:
+      MessageCreateDateTime:
+        type: string
+        format: date-time
+      MessageId:
+        type: string
+        minLength: 1
+        maxLength: 36

@@ -1,0 +1,18 @@
+{
+	"core": null,
+	"plugins": [
+		"pronamic/wp-env-quick-login",
+		"https://downloads.wordpress.org/plugin/log-http-requests.zip",
+		"https://downloads.wordpress.org/plugin/pronamic-client.zip",
+		"https://downloads.wordpress.org/plugin/pronamic-ideal.zip",
+		"https://downloads.wordpress.org/plugin/query-monitor.zip",
+		"https://downloads.wordpress.org/plugin/wp-plugin-dependencies.zip"
+	],
+	"mappings": {
+		"wp-content/plugins/pronamic-pay-worldline-open-banking-ideal-2-dev": "./",
+		"wp-content/plugins/pronamic-pay-worldline-open-banking-ideal-2": "./build/project/"
+	},
+	"config": {
+		"PRONAMIC_PAY_DEBUG": true
+	}
+}

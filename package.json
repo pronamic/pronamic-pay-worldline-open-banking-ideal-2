@@ -1,0 +1,40 @@
+{
+	"name": "@pronamic/pronamic-pay-worldline-open-banking-ideal-2",
+	"version": "1.0.0",
+	"description": "This plugin contains the Pronamic Pay integration for the Worldline Open Banking Platform and iDEAL 2.0.",
+	"author": "Pronamic",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"ideal",
+		"ideal-2",
+		"ideal-hub",
+		"msp",
+		"multi-service-platform",
+		"open-banking",
+		"open-banking-platform",
+		"open-banking-service",
+		"open-banking-services",
+		"payment",
+		"pronamic",
+		"pronamic-pay",
+		"rabobank",
+		"worldline",
+		"wordpress",
+		"wordpress-plugin"
+	],
+	"homepage": "https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2.git"
+	},
+	"bugs": {
+		"url": "https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2/issues"
+	},
+	"devDependencies": {
+		"@wordpress/env": "^9.4.0",
+		"@wordpress/scripts": "^27.3.0"
+	},
+	"scripts": {
+		"lint:pkg-json": "wp-scripts lint-pkg-json"
+	}
+}

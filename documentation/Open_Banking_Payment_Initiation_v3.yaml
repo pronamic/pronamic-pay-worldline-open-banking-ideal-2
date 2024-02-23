@@ -1,0 +1,4892 @@
+openapi: 3.0.1
+info:
+  title: Open Banking Payment Initiation V3
+  description: |
+    There are several flows (set of apis) to complete a payment. Which
+    apis are required depend on the choosen `PaymentProduct`, Aspsp (debtor bank) and the chosen strong customer
+    authentication approach. The response of an api call will indicate in the 'Links' section which next
+    api call is required to complete the payment.
+  version: "3.0"
+servers:
+  - url: /xs2a/routingservice/services/ob/pis/v3
+paths:
+  /payments:
+    post:
+      security:
+        - Authorization: []
+      tags:
+        - Payment Initiation V3
+      summary: Payment initiation request
+      description: |
+        Use this operation to initiate a payment on behalf of the Payment
+        Service User. Strong customer authentication might be required by the ASPSP,
+        the response will indicate which step is required to complete the payment.
+      operationId: paymentInitiate
+      parameters:
+        - $ref: '#/components/parameters/confirm'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+        - $ref: '#/components/parameters/InitiatingPartyReturnUrl'
+        - $ref: '#/components/parameters/UseAuthorisationLandingPages'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/AppRedirectPreferred'
+        - $ref: '#/components/parameters/PsuId'
+        - $ref: '#/components/parameters/LastLogin'
+        - $ref: '#/components/parameters/PsuIpAddress'
+        - $ref: '#/components/parameters/PsuIpPort'
+        - $ref: '#/components/parameters/HttpMethod'
+        - $ref: '#/components/parameters/HttpHeaderUserAgent'
+        - $ref: '#/components/parameters/HttpHeaderReferer'
+        - $ref: '#/components/parameters/HttpHeaderAccept'
+        - $ref: '#/components/parameters/HttpHeaderAcceptCharset'
+        - $ref: '#/components/parameters/HttpHeaderAcceptEncoding'
+        - $ref: '#/components/parameters/HttpHeaderAcceptLanguage'
+        - $ref: '#/components/parameters/DeviceId'
+        - $ref: '#/components/parameters/GeoLocation'
+        - $ref: "#/components/parameters/Signature"
+        - $ref: "#/components/parameters/Digest"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentInitiationRequest'
+        required: false
+      responses:
+        201:
+          description: |
+            Created
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+            Signature:
+              $ref: '#/components/headers/Signature'
+            Digest:
+              $ref: '#/components/headers/Digest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentInitiationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+      x-codegen-request-body-name: body
+
+  /payments/{paymentId}/status:
+    get:
+      security:
+        - Authorization: []
+      tags:
+        - Payment Initiation V3
+      summary: Status of the payment request
+      description: |
+        Use this operation to retrieve the status of a payment.
+      operationId: paymentStatus
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/confirm'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+        - $ref: '#/components/parameters/PsuIpAddress'
+        - $ref: '#/components/parameters/Signature'
+        - $ref: '#/components/parameters/Digest'
+      responses:
+        200:
+          description: |
+            Successful
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+            Signature:
+              $ref: '#/components/headers/Signature'
+            Digest:
+              $ref: '#/components/headers/Digest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentDetailedInformation'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /payments/{paymentId}/confirmation:
+    post:
+      security:
+        - Authorization: []
+      summary: Confirmation of the payment request by the PISP
+      tags:
+        - Payment Initiation V3
+      description: |
+        This Api is used to confirm a payment. Confirmation is required
+        when the payment is in the 'AUTHORISED' state. Confirmation of a payment can
+        be required in two cases 1) When its required by the ASPSP standard 2) when
+        a payment fee is involved, in that case the repsonse of the payments status
+        api will provide a link to this api in the 'FeePaymentConfirmationUrl' field.
+      operationId: paymentConfirmation
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmationRequest'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentConfirmationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /payments/{paymentId}/identification:
+    post:
+      security:
+        - Authorization: []
+      summary: Payment identification request
+      tags:
+        - Payment Initiation V3
+      description: |
+        Use this operation to identify a Psu in decoupled approach. The
+        response of the post payments api will provide a link to this api in the 'PostIdentificationForDecoupled'
+        field if this step is required.
+      operationId: paymentIdentification
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentIdentificationRequest'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentIdentificationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /payments/{paymentId}/authorisations:
+    post:
+      security:
+        - Authorization: []
+      summary: Payment authorisation request
+      tags:
+        - Payment Initiation V3
+      description: |
+        Use this operation to authorise a Psu explicitly. This has to be used if multiple Psu's have to authorise
+        the payment. Background information: If only one Psu has to authorise, this step is started implicitly by
+        the post payments api.
+      operationId: paymentAuthorisation
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentAuthorisationRequest'
+      responses:
+        201:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAuthorisationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /payments/{paymentId}/authorisations/{authorisationId}:
+    put:
+      security:
+        - Authorization: []
+      summary: Payment authorisation request
+      tags:
+        - Payment Initiation V3
+      description: |
+        Use this operation to change the authorisation resource.
+      operationId: paymentAuthorisationUpdate
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/authorisationId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentAuthorisationUpdateRequest'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAuthorisationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /payments/{paymentId}:
+    delete:
+      security:
+        - Authorization: []
+      summary: Payment cancellation request
+      tags:
+        - Payment Initiation V3
+      description: |
+        Use this operation to cancel a payment on behalf of the
+        Payment Service User. Strong Customer Authentication might be required by
+        the ASPSP, the response will indicate which step is required to complete the
+        payment.
+      operationId: paymentCancellation
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+        - $ref: '#/components/parameters/InitiatingPartyReturnUrl'
+        - $ref: '#/components/parameters/AspspPsuId'
+        - $ref: '#/components/parameters/AspspPsuIdType'
+        - $ref: '#/components/parameters/AspspPsuCorporateId'
+        - $ref: '#/components/parameters/AspspPsuCorporateIdType'
+        - $ref: '#/components/parameters/UseAuthorisationLandingPages'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/PsuIpAddress'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentCancellationResponse'
+        204:
+          $ref: '#/components/responses/204'
+        405:
+          $ref: '#/components/responses/405'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /payments/{paymentId}/cancellation-identification:
+    post:
+      security:
+        - Authorization: []
+      summary: Payment cancellation identification request
+      tags:
+        - Payment Initiation V3
+      description: |
+        Use this operation to identify a Psu in decoupled approach.
+      operationId: paymentCancellationIdentification
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentIdentificationRequest'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentIdentificationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /payments/{paymentId}/cancellation-authorisations:
+    post:
+      security:
+        - Authorization: []
+      tags:
+        - Payment Initiation V3
+      summary: Payment cancellation authorisation request
+      description: |
+        Use this operation to authorise a Psu explicitly.
+      operationId: paymentCancellationAuthorisation
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentAuthorisationRequest'
+      responses:
+        201:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAuthorisationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /payments/{paymentId}/cancellation-authorisations/{authorisationId}:
+    put:
+      security:
+        - Authorization: []
+      tags:
+        - Payment Initiation V3
+      summary: Payment cancellation authorisation request update
+      description: |
+        Use this operation to update the authorisation resource.
+      operationId: paymentCancellationAuthorisationUpdate
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/authorisationId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentAuthorisationUpdateRequest'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAuthorisationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /periodic-payments:
+    post:
+      security:
+        - Authorization: []
+      tags:
+        - Periodic Payment Initiation V3 (Extended services)
+      summary: Payment initiation request
+      description: |
+        Use this operation to initiate a payment on behalf of the Payment
+        Service User. Strong customer authentication might be required by the ASPSP,
+        the response will indicate which step is required to complete the payment.
+      operationId: periodicPaymentInitiate
+      parameters:
+        - $ref: '#/components/parameters/confirm'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+        - $ref: '#/components/parameters/InitiatingPartyReturnUrl'
+        - $ref: '#/components/parameters/UseAuthorisationLandingPages'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/AppRedirectPreferred'
+        - $ref: '#/components/parameters/PsuId'
+        - $ref: '#/components/parameters/LastLogin'
+        - $ref: '#/components/parameters/PsuIpAddress'
+        - $ref: '#/components/parameters/PsuIpPort'
+        - $ref: '#/components/parameters/HttpMethod'
+        - $ref: '#/components/parameters/HttpHeaderUserAgent'
+        - $ref: '#/components/parameters/HttpHeaderReferer'
+        - $ref: '#/components/parameters/HttpHeaderAccept'
+        - $ref: '#/components/parameters/HttpHeaderAcceptCharset'
+        - $ref: '#/components/parameters/HttpHeaderAcceptEncoding'
+        - $ref: '#/components/parameters/HttpHeaderAcceptLanguage'
+        - $ref: '#/components/parameters/DeviceId'
+        - $ref: '#/components/parameters/GeoLocation'
+        - $ref: "#/components/parameters/Signature"
+        - $ref: "#/components/parameters/Digest"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PeriodicPaymentInitiationRequest'
+        required: false
+      responses:
+        201:
+          description: |
+            Created
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+            Signature:
+              $ref: '#/components/headers/Signature'
+            Digest:
+              $ref: '#/components/headers/Digest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentInitiationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+      x-codegen-request-body-name: body
+
+  /periodic-payments/{paymentId}/status:
+    get:
+      security:
+        - Authorization: []
+      tags:
+        - Periodic Payment Initiation V3 (Extended services)
+      summary: Status of the payment request
+      description: |
+        Use this operation to retrieve the status of a payment.
+      operationId: periodicPaymentStatus
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/confirm'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+        - $ref: '#/components/parameters/PsuIpAddress'
+        - $ref: '#/components/parameters/Signature'
+        - $ref: '#/components/parameters/Digest'
+      responses:
+        200:
+          description: |
+            Successful
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+            Signature:
+              $ref: '#/components/headers/Signature'
+            Digest:
+              $ref: '#/components/headers/Digest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentDetailedInformation'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /periodic-payments/{paymentId}/confirmation:
+    post:
+      security:
+        - Authorization: []
+      summary: Confirmation of the payment request by the PISP
+      tags:
+        - Periodic Payment Initiation V3 (Extended services)
+      description: |
+        This Api is used to confirm a payment. Confirmation is required
+        when the payment is in the 'AUTHORISED' state. Confirmation of a payment can
+        be required in two cases 1) When its required by the ASPSP standard 2) when
+        a payment fee is involved, in that case the repsonse of the payments status
+        api will provide a link to this api in the 'FeePaymentConfirmationUrl' field.
+      operationId: periodicPaymentConfirmation
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmationRequest'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentConfirmationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /periodic-payments/{paymentId}/identification:
+    post:
+      security:
+        - Authorization: []
+      summary: Payment identification request
+      tags:
+        - Periodic Payment Initiation V3 (Extended services)
+      description: |
+        Use this operation to identify a Psu in decoupled approach. The
+        response of the post payments api will provide a link to this api in the 'PostIdentificationForDecoupled'
+        field if this step is required.
+      operationId: PeriodicPaymentIdentification
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentIdentificationRequest'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentIdentificationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /periodic-payments/{paymentId}/authorisations:
+    post:
+      security:
+        - Authorization: []
+      summary: Payment authorisation request
+      tags:
+        - Periodic Payment Initiation V3 (Extended services)
+      description: |
+        Use this operation to authorise a Psu explicitly. This has to be used if multiple Psu's have to authorise
+        the payment. Background information: If only one Psu has to authorise, this step is started implicitly by
+        the post payments api.
+      operationId: periodicPaymentAuthorisation
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentAuthorisationRequest'
+      responses:
+        201:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAuthorisationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /periodic-payments/{paymentId}/authorisations/{authorisationId}:
+    put:
+      security:
+        - Authorization: []
+      summary: Payment authorisation request
+      tags:
+        - Periodic Payment Initiation V3 (Extended services)
+      description: |
+        Use this operation to change the authorisation resource.
+      operationId: periodicPaymentAuthorisationUpdate
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/authorisationId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentAuthorisationUpdateRequest'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAuthorisationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /periodic-payments/{paymentId}:
+    delete:
+      security:
+        - Authorization: []
+      summary: Payment cancellation request
+      tags:
+        - Periodic Payment Initiation V3 (Extended services)
+      description: |
+        Use this operation to cancel a payment on behalf of the
+        Payment Service User. Strong Customer Authentication might be required by
+        the ASPSP, the response will indicate which step is required to complete the
+        payment.
+      operationId: periodicPaymentCancellation
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+        - $ref: '#/components/parameters/InitiatingPartyReturnUrl'
+        - $ref: '#/components/parameters/AspspPsuId'
+        - $ref: '#/components/parameters/AspspPsuIdType'
+        - $ref: '#/components/parameters/AspspPsuCorporateId'
+        - $ref: '#/components/parameters/AspspPsuCorporateIdType'
+        - $ref: '#/components/parameters/UseAuthorisationLandingPages'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/PsuIpAddress'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentCancellationResponse'
+        204:
+          $ref: '#/components/responses/204'
+        405:
+          $ref: '#/components/responses/405'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /periodic-payments/{paymentId}/cancellation-identification:
+    post:
+      security:
+        - Authorization: []
+      summary: Payment cancellation identification request
+      tags:
+        - Periodic Payment Initiation V3 (Extended services)
+      description: |
+        Use this operation to identify a Psu in decoupled approach.
+      operationId: periodicPaymentCancellationIdentification
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentIdentificationRequest'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentIdentificationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /periodic-payments/{paymentId}/cancellation-authorisations:
+    post:
+      security:
+        - Authorization: []
+      tags:
+        - Periodic Payment Initiation V3 (Extended services)
+      summary: Payment cancellation authorisation request
+      description: |
+        Use this operation to authorise a Psu explicitly.
+      operationId: periodicPaymentCancellationAuthorisation
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentAuthorisationRequest'
+      responses:
+        201:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAuthorisationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /periodic-payments/{paymentId}/cancellation-authorisations/{authorisationId}:
+    put:
+      security:
+        - Authorization: []
+      tags:
+        - Periodic Payment Initiation V3 (Extended services)
+      summary: Payment cancellation authorisation request update
+      description: |
+        Use this operation to update the authorisation resource.
+      operationId: periodicPaymentCancellationAuthorisationUpdate
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/authorisationId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentAuthorisationUpdateRequest'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAuthorisationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /scheduled-payments:
+    post:
+      security:
+        - Authorization: []
+      tags:
+        - Scheduled Payment Initiation V3 (Extended services)
+      summary: Payment initiation request
+      description: |
+        Use this operation to initiate a payment on behalf of the Payment
+        Service User. Strong customer authentication might be required by the ASPSP,
+        the response will indicate which step is required to complete the payment.
+      operationId: scheduledPaymentInitiate
+      parameters:
+        - $ref: '#/components/parameters/confirm'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+        - $ref: '#/components/parameters/InitiatingPartyReturnUrl'
+        - $ref: '#/components/parameters/UseAuthorisationLandingPages'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/AppRedirectPreferred'
+        - $ref: '#/components/parameters/PsuId'
+        - $ref: '#/components/parameters/LastLogin'
+        - $ref: '#/components/parameters/PsuIpAddress'
+        - $ref: '#/components/parameters/PsuIpPort'
+        - $ref: '#/components/parameters/HttpMethod'
+        - $ref: '#/components/parameters/HttpHeaderUserAgent'
+        - $ref: '#/components/parameters/HttpHeaderReferer'
+        - $ref: '#/components/parameters/HttpHeaderAccept'
+        - $ref: '#/components/parameters/HttpHeaderAcceptCharset'
+        - $ref: '#/components/parameters/HttpHeaderAcceptEncoding'
+        - $ref: '#/components/parameters/HttpHeaderAcceptLanguage'
+        - $ref: '#/components/parameters/DeviceId'
+        - $ref: '#/components/parameters/GeoLocation'
+        - $ref: "#/components/parameters/Signature"
+        - $ref: "#/components/parameters/Digest"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduledPaymentInitiationRequest'
+        required: false
+      responses:
+        201:
+          description: |
+            Created
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+            Signature:
+              $ref: '#/components/headers/Signature'
+            Digest:
+              $ref: '#/components/headers/Digest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentInitiationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+      x-codegen-request-body-name: body
+
+  /scheduled-payments/{paymentId}/status:
+    get:
+      security:
+        - Authorization: []
+      tags:
+        - Scheduled Payment Initiation V3 (Extended services)
+      summary: Status of the payment request
+      description: |
+        Use this operation to retrieve the status of a payment.
+      operationId: scheduledPaymentStatus
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/confirm'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+        - $ref: '#/components/parameters/PsuIpAddress'
+        - $ref: '#/components/parameters/Signature'
+        - $ref: '#/components/parameters/Digest'
+      responses:
+        200:
+          description: |
+            Successful
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+            Signature:
+              $ref: '#/components/headers/Signature'
+            Digest:
+              $ref: '#/components/headers/Digest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentDetailedInformation'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /scheduled-payments/{paymentId}/confirmation:
+    post:
+      security:
+        - Authorization: []
+      summary: Confirmation of the payment request by the PISP
+      tags:
+        - Scheduled Payment Initiation V3 (Extended services)
+      description: |
+        This Api is used to confirm a payment. Confirmation is required
+        when the payment is in the 'AUTHORISED' state. Confirmation of a payment can
+        be required in two cases 1) When its required by the ASPSP standard 2) when
+        a payment fee is involved, in that case the repsonse of the payments status
+        api will provide a link to this api in the 'FeePaymentConfirmationUrl' field.
+      operationId: scheduledPaymentConfirmation
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmationRequest'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentConfirmationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /scheduled-payments/{paymentId}/identification:
+    post:
+      security:
+        - Authorization: []
+      summary: Payment identification request
+      tags:
+        - Scheduled Payment Initiation V3 (Extended services)
+      description: |
+        Use this operation to identify a Psu in decoupled approach. The
+        response of the post payments api will provide a link to this api in the 'PostIdentificationForDecoupled'
+        field if this step is required.
+      operationId: scheduledPaymentIdentification
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentIdentificationRequest'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentIdentificationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /scheduled-payments/{paymentId}/authorisations:
+    post:
+      security:
+        - Authorization: []
+      summary: Payment authorisation request
+      tags:
+        - Scheduled Payment Initiation V3 (Extended services)
+      description: |
+        Use this operation to authorise a Psu explicitly. This has to be used if multiple Psu's have to authorise
+        the payment. Background information: If only one Psu has to authorise, this step is started implicitly by
+        the post payments api.
+      operationId: scheduledPaymentAuthorisation
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentAuthorisationRequest'
+      responses:
+        201:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAuthorisationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /scheduled-payments/{paymentId}/authorisations/{authorisationId}:
+    put:
+      security:
+        - Authorization: []
+      summary: Payment authorisation request
+      tags:
+        - Scheduled Payment Initiation V3 (Extended services)
+      description: |
+        Use this operation to change the authorisation resource.
+      operationId: scheduledPaymentAuthorisationUpdate
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/authorisationId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentAuthorisationUpdateRequest'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAuthorisationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /scheduled-payments/{paymentId}:
+    delete:
+      security:
+        - Authorization: []
+      summary: Payment cancellation request
+      tags:
+        - Scheduled Payment Initiation V3 (Extended services)
+      description: |
+        Use this operation to cancel a payment on behalf of the
+        Payment Service User. Strong Customer Authentication might be required by
+        the ASPSP, the response will indicate which step is required to complete the
+        payment.
+      operationId: scheduledPaymentCancellation
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+        - $ref: '#/components/parameters/InitiatingPartyReturnUrl'
+        - $ref: '#/components/parameters/AspspPsuId'
+        - $ref: '#/components/parameters/AspspPsuIdType'
+        - $ref: '#/components/parameters/AspspPsuCorporateId'
+        - $ref: '#/components/parameters/AspspPsuCorporateIdType'
+        - $ref: '#/components/parameters/UseAuthorisationLandingPages'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/PsuIpAddress'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentCancellationResponse'
+        204:
+          $ref: '#/components/responses/204'
+        405:
+          $ref: '#/components/responses/405'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /scheduled-payments/{paymentId}/cancellation-identification:
+    post:
+      security:
+        - Authorization: []
+      summary: Payment cancellation identification request
+      tags:
+        - Scheduled Payment Initiation V3 (Extended services)
+      description: |
+        Use this operation to identify a Psu in decoupled approach.
+      operationId: scheduledPaymentCancellationIdentification
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentIdentificationRequest'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentIdentificationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /scheduled-payments/{paymentId}/cancellation-authorisations:
+    post:
+      security:
+        - Authorization: []
+      tags:
+        - Scheduled Payment Initiation V3 (Extended services)
+      summary: Payment cancellation authorisation request
+      description: |
+        Use this operation to authorise a Psu explicitly.
+      operationId: scheduledPaymentCancellationAuthorisation
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentAuthorisationRequest'
+      responses:
+        201:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAuthorisationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /scheduled-payments/{paymentId}/cancellation-authorisations/{authorisationId}:
+    put:
+      security:
+        - Authorization: []
+      tags:
+        - Scheduled Payment Initiation V3 (Extended services)
+      summary: Payment cancellation authorisation request update
+      description: |
+        Use this operation to update the authorisation resource.
+      operationId: scheduledPaymentCancellationAuthorisationUpdate
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/authorisationId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentAuthorisationUpdateRequest'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAuthorisationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /bulk-payments:
+    post:
+      security:
+        - Authorization: []
+      tags:
+        - Bulk Payment Initiation V3 (Extended services)
+      summary: Payment initiation request
+      description: |
+        Use this operation to initiate a payment on behalf of the Payment
+        Service User. Strong customer authentication might be required by the ASPSP,
+        the response will indicate which step is required to complete the payment.
+      operationId: bulkPaymentInitiate
+      parameters:
+        - $ref: '#/components/parameters/confirm'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+        - $ref: '#/components/parameters/InitiatingPartyReturnUrl'
+        - $ref: '#/components/parameters/UseAuthorisationLandingPages'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/AppRedirectPreferred'
+        - $ref: '#/components/parameters/PsuId'
+        - $ref: '#/components/parameters/LastLogin'
+        - $ref: '#/components/parameters/PsuIpAddress'
+        - $ref: '#/components/parameters/PsuIpPort'
+        - $ref: '#/components/parameters/HttpMethod'
+        - $ref: '#/components/parameters/HttpHeaderUserAgent'
+        - $ref: '#/components/parameters/HttpHeaderReferer'
+        - $ref: '#/components/parameters/HttpHeaderAccept'
+        - $ref: '#/components/parameters/HttpHeaderAcceptCharset'
+        - $ref: '#/components/parameters/HttpHeaderAcceptEncoding'
+        - $ref: '#/components/parameters/HttpHeaderAcceptLanguage'
+        - $ref: '#/components/parameters/DeviceId'
+        - $ref: '#/components/parameters/GeoLocation'
+        - $ref: "#/components/parameters/Signature"
+        - $ref: "#/components/parameters/Digest"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkPaymentInitiationRequest'
+        required: false
+      responses:
+        201:
+          description: |
+            Created
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+            Signature:
+              $ref: '#/components/headers/Signature'
+            Digest:
+              $ref: '#/components/headers/Digest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentInitiationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+      x-codegen-request-body-name: body
+
+  /bulk-payments/{paymentId}/status:
+    get:
+      security:
+        - Authorization: []
+      tags:
+        - Bulk Payment Initiation V3 (Extended services)
+      summary: Status of the payment request
+      description: |
+        Use this operation to retrieve the status of a payment.
+      operationId: bulkPaymentStatus
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/confirm'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+        - $ref: '#/components/parameters/PsuIpAddress'
+        - $ref: '#/components/parameters/Signature'
+        - $ref: '#/components/parameters/Digest'
+      responses:
+        200:
+          description: |
+            Successful
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+            Signature:
+              $ref: '#/components/headers/Signature'
+            Digest:
+              $ref: '#/components/headers/Digest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentDetailedInformation'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /bulk-payments/{paymentId}/confirmation:
+    post:
+      security:
+        - Authorization: []
+      summary: Confirmation of the payment request by the PISP
+      tags:
+        - Bulk Payment Initiation V3 (Extended services)
+      description: |
+        This Api is used to confirm a payment. Confirmation is required
+        when the payment is in the 'AUTHORISED' state. Confirmation of a payment can
+        be required in two cases 1) When its required by the ASPSP standard 2) when
+        a payment fee is involved, in that case the repsonse of the payments status
+        api will provide a link to this api in the 'FeePaymentConfirmationUrl' field.
+      operationId: bulkPaymentConfirmation
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmationRequest'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentConfirmationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /bulk-payments/{paymentId}/identification:
+    post:
+      security:
+        - Authorization: []
+      summary: Payment identification request
+      tags:
+        - Bulk Payment Initiation V3 (Extended services)
+      description: |
+        Use this operation to identify a Psu in decoupled approach. The
+        response of the post payments api will provide a link to this api in the 'PostIdentificationForDecoupled'
+        field if this step is required.
+      operationId: bulkPaymentIdentification
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentIdentificationRequest'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentIdentificationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /bulk-payments/{paymentId}/authorisations:
+    post:
+      security:
+        - Authorization: []
+      summary: Payment authorisation request
+      tags:
+        - Bulk Payment Initiation V3 (Extended services)
+      description: |
+        Use this operation to authorise a Psu explicitly. This has to be used if multiple Psu's have to authorise
+        the payment. Background information: If only one Psu has to authorise, this step is started implicitly by
+        the post payments api.
+      operationId: bulkPaymentAuthorisation
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentAuthorisationRequest'
+      responses:
+        201:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAuthorisationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /bulk-payments/{paymentId}/authorisations/{authorisationId}:
+    put:
+      security:
+        - Authorization: []
+      summary: Payment authorisation request
+      tags:
+        - Bulk Payment Initiation V3 (Extended services)
+      description: |
+        Use this operation to change the authorisation resource.
+      operationId: bulkPaymentAuthorisationUpdate
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/authorisationId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentAuthorisationUpdateRequest'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAuthorisationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /bulk-payments/{paymentId}:
+    delete:
+      security:
+        - Authorization: []
+      summary: Payment cancellation request
+      tags:
+        - Bulk Payment Initiation V3 (Extended services)
+      description: |
+        Use this operation to cancel a payment on behalf of the
+        Payment Service User. Strong Customer Authentication might be required by
+        the ASPSP, the response will indicate which step is required to complete the
+        payment.
+      operationId: bulkPaymentCancellation
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+        - $ref: '#/components/parameters/InitiatingPartyReturnUrl'
+        - $ref: '#/components/parameters/AspspPsuId'
+        - $ref: '#/components/parameters/AspspPsuIdType'
+        - $ref: '#/components/parameters/AspspPsuCorporateId'
+        - $ref: '#/components/parameters/AspspPsuCorporateIdType'
+        - $ref: '#/components/parameters/UseAuthorisationLandingPages'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/PsuIpAddress'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentCancellationResponse'
+        204:
+          $ref: '#/components/responses/204'
+        405:
+          $ref: '#/components/responses/405'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /bulk-payments/{paymentId}/cancellation-identification:
+    post:
+      security:
+        - Authorization: []
+      summary: Payment cancellation identification request
+      tags:
+        - Bulk Payment Initiation V3 (Extended services)
+      description: |
+        Use this operation to identify a Psu in decoupled approach.
+      operationId: bulkPaymentCancellationIdentification
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentIdentificationRequest'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentIdentificationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /bulk-payments/{paymentId}/cancellation-authorisations:
+    post:
+      security:
+        - Authorization: []
+      tags:
+        - Bulk Payment Initiation V3 (Extended services)
+      summary: Payment cancellation authorisation request
+      description: |
+        Use this operation to authorise a Psu explicitly.
+      operationId: bulkPaymentCancellationAuthorisation
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentAuthorisationRequest'
+      responses:
+        201:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAuthorisationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /bulk-payments/{paymentId}/cancellation-authorisations/{authorisationId}:
+    put:
+      security:
+        - Authorization: []
+      tags:
+        - Bulk Payment Initiation V3 (Extended services)
+      summary: Payment cancellation authorisation request update
+      description: |
+        Use this operation to update the authorisation resource.
+      operationId: bulkPaymentCancellationAuthorisationUpdate
+      parameters:
+        - $ref: '#/components/parameters/paymentId'
+        - $ref: '#/components/parameters/authorisationId'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentAuthorisationUpdateRequest'
+      responses:
+        200:
+          description: |
+            OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAuthorisationResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        502:
+          $ref: '#/components/responses/502'
+        503:
+          $ref: '#/components/responses/503'
+        511:
+          $ref: '#/components/responses/511'
+
+  /preferences/{Psuid}/:
+    get:
+      security:
+        - Authorization: []
+      tags:
+        - Debtor Preference Retrieval
+      description: |
+        Currently could be used only for iDEAL 2.0 payments
+      summary: Get Psu prefered bank and prefered account
+      operationId: getAllPsuBanksWithAccounts
+      parameters:
+        - $ref: '#/components/parameters/Psuid'
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/MessageCreateDateTime'
+        - $ref: '#/components/parameters/Signature'
+        - $ref: "#/components/parameters/Digest"
+      responses:
+        200:
+          description: OK
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+            MessageCreateDateTime:
+              $ref: '#/components/headers/MessageCreateDateTime'
+            Signature:
+              $ref: '#/components/headers/Signature'
+            Digest:
+              $ref: '#/components/headers/Digest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PsuBankPreferences'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Missing or wrong IP Token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Expired IP Token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    Authorization:
+      type: http
+      scheme: bearer
+
+  schemas:
+    PaymentInitiationRequest:
+      description: |
+        Payment Initiation Request
+      required:
+        - CommonPaymentData
+      properties:
+        PaymentProduct:
+          type: array
+          description: |
+            Multiple PaymentProducts can only be supplied if `UseAuthorisationLandingPages` equals `TRUE`. These will then influence ASPSPs visible to the PSU on the Initiation Service pages. The IDEAL payment product requires a separate subscription and therefore uses a different authorization token.
+          items:
+            $ref: '#/components/schemas/PaymentProductEnum'
+        PaymentProductChangeable:
+          type: boolean
+          default: false
+          description: |
+            Allowing Psu to change pre-selected payment product if the ASPSP supports more than one from the list provided by the IP. Usable only if `UseAuthorisationLandingPages` equals `TRUE`. Otherwise will be ignored.
+        ProductSpecificMasterData:
+          type: array
+          description: |
+            The array is defined to mention the master data specific to selected payment product
+          items:
+            $ref: '#/components/schemas/ProductSpecificMasterData'
+        PsuData:
+          $ref: '#/components/schemas/PsuData'
+        CommonPaymentData:
+          $ref: '#/components/schemas/PaymentInitiationRequestBasic'
+        IDEALPayments:
+          $ref: '#/components/schemas/IDEALPayments'
+
+    PaymentInitiationRequestBasic:
+      type: object
+      required:
+        - Amount
+      properties:
+        UsePreAuthentication:
+          type: boolean
+          default: false
+          description: |
+            This field is only applicable for Aspsp which support pre-authentication (see chapter 4 Reach API). It can also be filled in payments toward other Aspsps, but the value will then be ignored.
+            * If set to true the TPP solution will store the pre-authentication token for use with future payments. This will only work if also a PsuId is provided which is stored in the TPP solution.
+            * If set to false the pre-authentication token will only be used to finish one payment. After which it will be discarded.
+        EndToEndId:
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: |
+            Unique identification, as assigned by the initiating party,
+            to unambiguously identify the transaction. This
+            identification is passed on, unchanged, throughout the
+            entire end-to-end chain. Usage: The end-to-end
+            identification can be used for reconciliation or to link
+            tasks relating to the transaction. It can be included in
+            several messages related to the transaction.
+            Required for PSD2 payments
+          example: ID-0123456789
+        InitiatingPartyReferenceId:
+          maxLength: 36
+          minLength: 1
+          type: string
+          description: |
+            Reference to the payment created by the Initiating Party.
+            This Id will not be visible to the Payment Service User.
+            Required for PSD2 payments
+          example: InitParty ref-id-23457890
+        PreferredScaMethod:
+          type: array
+          description: |
+            Multiple preferred methods can be choosen. It is not guaranteed that the ASPSP will use approach according to the setting. If not filled, no preferred method.
+          items:
+            type: string
+            enum:
+              - Redirect
+              - Decoupled
+              - Embedded
+        TransactionType:
+          type: string
+          description: |
+            Transaction type used in this transaction.
+            ONLINE - Used particularly for Online transactions, e.g. a webshop
+            QR - Used for transactions from a QR. eg. Invoice
+            INSTORE - Used for instore transactions for eg.- a POS device
+            P2P - Used for pear-to-pear (customer-to-customer) transactions, e.g. a Transaction Request
+          enum:
+            - Online
+            - QR
+            - Instore
+            - P2P
+          default: Online
+        ExpirationPeriod:
+          type: integer
+          description: |
+            Time in seconds after which the transaction will expire. If not provided a default value will be used if the `PaymentProduct` equals `IDEAL`. For ONLINE - 1200 and for INSTORE - 120. Required for QR type transactions
+          minimum: 60
+          maximum: 3600
+          exclusiveMinimum: false
+          exclusiveMaximum: false
+        Amount:
+          $ref: '#/components/schemas/Amount'
+        DebtorInformation:
+          $ref: '#/components/schemas/DebtorInformation'
+        CreditorInformation:
+          $ref: '#/components/schemas/CreditorInformation'
+        ChargeBearer:
+          type: string
+          description: |
+            Charge bearer.
+
+            Note - ISO20022 ChargeBearerType1Code.
+          enum:
+            - DEBT
+            - CRED
+            - SHAR
+            - SLEV
+        PurposeCode:
+          type: string
+          description: |
+            Specifies the purpose code that resulted in a payment initiation.
+            Fill with a 4 characters code from the ExternalPurpose1Code list published
+            by ISO20022 or use the values ‘Commerce’, ‘Carpark’, ‘Transport’.
+        CategoryPurpose:
+          type: string
+          description: |
+            Specifies the high level purpose of the instruction based on a set of pre-defined categories. This is used by the initiating party to provide information concerning the processing of the payment. It is likely to trigger special processing by any of the agents involved in the payment chain.
+          enum:
+            - CASH
+            - CORT
+            - DVPM
+            - INTC
+            - TREA
+        PaymentContext:
+          $ref: '#/components/schemas/RiskInformation'
+        CrossCurrencyPayments:
+          $ref: '#/components/schemas/CrossCurrencyPayment'
+        RegulatoryReportingCodes:
+          maxItems: 10
+          minItems: 1
+          type: array
+          description: |
+            List of needed regulatory reporting codes for international payments
+          items:
+            $ref: '#/components/schemas/RegulatoryReportingCode'
+          x-DefinitionType: ISO20022
+        RemittanceInformation:
+          maxLength: 140
+          minLength: 1
+          type: string
+          description: |
+            Information supplied to enable the matching of an entry with
+            the items that the transfer is intended to settle. This information
+            will be visible to the Payment Service User.
+        RemittanceInformationStructured:
+          $ref: '#/components/schemas/RemittanceInformationStructured'
+      description: |
+        Basic type for Payment Initiation Request
+
+    ScheduledPaymentInitiationRequest:
+      description: |
+        ScheduledPaymentInitiationRequest
+      required:
+        - CommonPaymentData
+      properties:
+        PaymentProduct:
+          type: array
+          description: |
+            Multiple PaymentProducts can only be supplied if `UseAuthorisationLandingPages` equals `TRUE`. These will then influence ASPSPs visible to the PSU on the Initiation Service pages.
+          items:
+            $ref: '#/components/schemas/PaymentProductEnum'
+        PaymentProductChangeable:
+          type: boolean
+          default: false
+          description: |
+            Allowing Psu to change pre-selected payment product if the ASPSP supports more than one from the list provided by the IP. Usable only if `UseAuthorisationLandingPages` equals `TRUE`. Otherwise will be ignored.
+        ProductSpecificMasterData:
+          type: array
+          description: |
+            The array is defined to mention the master data specific to selected payment product
+          items:
+            $ref: '#/components/schemas/ProductSpecificMasterData'
+        PsuData:
+          $ref: '#/components/schemas/PsuData'
+        CommonPaymentData:
+          $ref: '#/components/schemas/ScheduledPaymentInitiationRequestBasic'
+
+    ScheduledPaymentInitiationRequestBasic:
+      type: object
+      required:
+        - Amount
+        - RequestedExecutionDate
+      properties:
+        UsePreAuthentication:
+          type: boolean
+          default: false
+          description: |
+            This field is only applicable for Aspsp which support pre-authentication (see chapter 4 Reach API). It can also be filled in payments toward other Aspsps, but the value will then be ignored.
+            * If set to true the TPP solution will store the pre-authentication token for use with future payments. This will only work if also a PsuId is provided which is stored in the TPP solution.
+            * If set to false the pre-authentication token will only be used to finish one payment. After which it will be discarded.
+        EndToEndId:
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: |
+            Unique identification, as assigned by the initiating party,
+            to unambiguously identify the transaction. This
+            identification is passed on, unchanged, throughout the
+            entire end-to-end chain. Usage: The end-to-end
+            identification can be used for reconciliation or to link
+            tasks relating to the transaction. It can be included in
+            several messages related to the transaction.
+            Required for PSD2 payments
+          example: ID-0123456789
+        InitiatingPartyReferenceId:
+          maxLength: 36
+          minLength: 1
+          type: string
+          description: |
+            Reference to the payment created by the Initiating Party.
+            This Id will not be visible to the Payment Service User.
+            Required for PSD2 payments
+          example: InitParty ref-id-23457890
+        PreferredScaMethod:
+          type: array
+          description: |
+            Multiple preferred methods can be choosen. It is not guaranteed that the ASPSP will use approach according to the setting. If not filled, no preferred method.
+          items:
+            type: string
+            enum:
+              - Redirect
+              - Decoupled
+              - Embedded
+        TransactionType:
+          type: string
+          description: |
+            Transaction type used in this transaction.
+            ONLINE - Used particularly for Online transactions, e.g. a webshop
+            QR - Used for transactions from a QR. eg. Invoice
+            INSTORE - Used for instore transactions for eg.- a POS device
+            P2P - Used for pear-to-pear (customer-to-customer) transactions, e.g. a Transaction Request
+          enum:
+            - Online
+            - QR
+            - Instore
+            - P2P
+          default: Online
+        ExpirationPeriod:
+          type: integer
+          description: |
+            Time in seconds after which the transaction will expire. If not provided a default value will be used if the `PaymentProduct` equals `IDEAL`. For ONLINE - 1200 and for INSTORE - 120. Required for QR type transactions
+          minimum: 60
+          maximum: 3600
+          exclusiveMinimum: false
+          exclusiveMaximum: false
+        Amount:
+          $ref: '#/components/schemas/Amount'
+        DebtorInformation:
+          $ref: '#/components/schemas/DebtorInformation'
+        CreditorInformation:
+          $ref: '#/components/schemas/CreditorInformation'
+        ChargeBearer:
+          type: string
+          description: |
+            Charge bearer.
+
+            Note - ISO20022 ChargeBearerType1Code.
+          enum:
+            - DEBT
+            - CRED
+            - SHAR
+            - SLEV
+        PurposeCode:
+          type: string
+          description: |
+            Specifies the purpose code that resulted in a payment initiation.
+            Fill with a 4 characters code from the ExternalPurpose1Code list published
+            by ISO20022 or use the values ‘Commerce’, ‘Carpark’, ‘Transport’.
+        CategoryPurpose:
+          type: string
+          description: |
+            Specifies the high level purpose of the instruction based on a set of pre-defined categories. This is used by the initiating party to provide information concerning the processing of the payment. It is likely to trigger special processing by any of the agents involved in the payment chain.
+          enum:
+            - CASH
+            - CORT
+            - DVPM
+            - INTC
+            - TREA
+        PaymentContext:
+          $ref: '#/components/schemas/RiskInformation'
+        CrossCurrencyPayments:
+          $ref: '#/components/schemas/CrossCurrencyPayment'
+        RegulatoryReportingCodes:
+          maxItems: 10
+          minItems: 1
+          type: array
+          description: |
+            List of needed regulatory reporting codes for international payments
+          items:
+            $ref: '#/components/schemas/RegulatoryReportingCode'
+          x-DefinitionType: ISO20022
+        RemittanceInformation:
+          maxLength: 140
+          minLength: 1
+          type: string
+          description: |
+            Information supplied to enable the matching of an entry with
+            the items that the transfer is intended to settle. This information
+            will be visible to the Payment Service User.
+        RemittanceInformationStructured:
+          $ref: '#/components/schemas/RemittanceInformationStructured'
+        RequestedExecutionDate:
+          type: string
+          description: |
+            Date of first payment execution. ISO 8601 DateTime.
+          format: date-time
+      description: |
+        Basic type for Scheduled Payment InitiationRequest
+
+    PeriodicPaymentInitiationRequest:
+      description: |
+        Periodic Payment Initiation Request
+      required:
+        - CommonPaymentData
+      properties:
+        PaymentProduct:
+          type: array
+          description: |
+            Multiple PaymentProducts can only be supplied if `UseAuthorisationLandingPages` equals `TRUE`. These will then influence ASPSPs visible to the PSU on the Initiation Service pages.
+          items:
+            $ref: '#/components/schemas/PaymentProductEnum'
+        PaymentProductChangeable:
+          type: boolean
+          default: false
+          description: |
+            Allowing Psu to change pre-selected payment product if the ASPSP supports more than one from the list provided by the IP. Usable only if `UseAuthorisationLandingPages` equals `TRUE`. Otherwise will be ignored.
+        ProductSpecificMasterData:
+          type: array
+          description: |
+            The array is defined to mention the master data specific to selected payment product
+          items:
+            $ref: '#/components/schemas/ProductSpecificMasterData'
+        PsuData:
+          $ref: '#/components/schemas/PsuData'
+        CommonPaymentData:
+          $ref: '#/components/schemas/PeriodicPaymentInitiationRequestBasic'
+
+    PeriodicPaymentInitiationRequestBasic:
+      type: object
+      required:
+        - Amount
+        - PeriodRules
+      properties:
+        UsePreAuthentication:
+          type: boolean
+          default: false
+          description: |
+            This field is only applicable for Aspsp which support pre-authentication (see chapter 4 Reach API). It can also be filled in payments toward other Aspsps, but the value will then be ignored.
+            * If set to true the TPP solution will store the pre-authentication token for use with future payments. This will only work if also a PsuId is provided which is stored in the TPP solution.
+            * If set to false the pre-authentication token will only be used to finish one payment. After which it will be discarded.
+        EndToEndId:
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: |
+            Unique identification, as assigned by the initiating party,
+            to unambiguously identify the transaction. This
+            identification is passed on, unchanged, throughout the
+            entire end-to-end chain. Usage: The end-to-end
+            identification can be used for reconciliation or to link
+            tasks relating to the transaction. It can be included in
+            several messages related to the transaction.
+            Required for PSD2 payments
+          example: ID-0123456789
+        InitiatingPartyReferenceId:
+          maxLength: 36
+          minLength: 1
+          type: string
+          description: |
+            Reference to the payment created by the Initiating Party.
+            This Id will not be visible to the Payment Service User.
+            Required for PSD2 payments
+          example: InitParty ref-id-23457890
+        PreferredScaMethod:
+          type: array
+          description: |
+            Multiple preferred methods can be choosen. It is not guaranteed that the ASPSP will use approach according to the setting. If not filled, no preferred method.
+          items:
+            type: string
+            enum:
+              - Redirect
+              - Decoupled
+              - Embedded
+        TransactionType:
+          type: string
+          description: |
+            Transaction type used in this transaction.
+            ONLINE - Used particularly for Online transactions, e.g. a webshop
+            QR - Used for transactions from a QR. eg. Invoice
+            INSTORE - Used for instore transactions for eg.- a POS device
+            P2P - Used for pear-to-pear (customer-to-customer) transactions, e.g. a Transaction Request
+          enum:
+            - Online
+            - QR
+            - Instore
+            - P2P
+          default: Online
+        ExpirationPeriod:
+          type: integer
+          description: |
+            Time in seconds after which the transaction will expire. If not provided a default value will be used if the `PaymentProduct` equals `IDEAL`. For ONLINE - 1200 and for INSTORE - 120. Required for QR type transactions
+          minimum: 60
+          maximum: 3600
+          exclusiveMinimum: false
+          exclusiveMaximum: false
+        Amount:
+          $ref: '#/components/schemas/Amount'
+        DebtorInformation:
+          $ref: '#/components/schemas/DebtorInformation'
+        CreditorInformation:
+          $ref: '#/components/schemas/CreditorInformation'
+        ChargeBearer:
+          type: string
+          description: |
+            Charge bearer.
+
+            Note - ISO20022 ChargeBearerType1Code.
+          enum:
+            - DEBT
+            - CRED
+            - SHAR
+            - SLEV
+        PurposeCode:
+          type: string
+          description: |
+            Specifies the purpose code that resulted in a payment initiation.
+            Fill with a 4 characters code from the ExternalPurpose1Code list published
+            by ISO20022 or use the values ‘Commerce’, ‘Carpark’, ‘Transport’.
+        CategoryPurpose:
+          type: string
+          description: |
+            Specifies the high level purpose of the instruction based on a set of pre-defined categories. This is used by the initiating party to provide information concerning the processing of the payment. It is likely to trigger special processing by any of the agents involved in the payment chain.
+          enum:
+            - CASH
+            - CORT
+            - DVPM
+            - INTC
+            - TREA
+        PaymentContext:
+          $ref: '#/components/schemas/RiskInformation'
+        CrossCurrencyPayments:
+          $ref: '#/components/schemas/CrossCurrencyPayment'
+        RegulatoryReportingCodes:
+          maxItems: 10
+          minItems: 1
+          type: array
+          description: |
+            List of needed regulatory reporting codes for international payments
+          items:
+            $ref: '#/components/schemas/RegulatoryReportingCode'
+          x-DefinitionType: ISO20022
+        RemittanceInformation:
+          maxLength: 140
+          minLength: 1
+          type: string
+          description: |
+            Information supplied to enable the matching of an entry with
+            the items that the transfer is intended to settle. This information
+            will be visible to the Payment Service User.
+        RemittanceInformationStructured:
+          $ref: '#/components/schemas/RemittanceInformationStructured'
+        PeriodRules:
+          $ref: '#/components/schemas/PeriodRules'
+      description: |
+        Basic type for Periodic Payment InitiationRequest
+
+    BulkPaymentInitiationRequest:
+      description: |
+        Bulk Payment Initiation Request
+      required:
+        - CommonPaymentData
+      properties:
+        PaymentProduct:
+          type: array
+          description: |
+            Multiple PaymentProducts can only be supplied if `UseAuthorisationLandingPages` equals `TRUE`. These will then influence ASPSPs visible to the PSU on the Initiation Service pages.
+          items:
+            $ref: '#/components/schemas/PaymentProductEnum'
+        PaymentProductChangeable:
+          type: boolean
+          default: false
+          description: |
+            Allowing Psu to change pre-selected payment product if the ASPSP supports more than one from the list provided by the IP. Usable only if `UseAuthorisationLandingPages` equals `TRUE`. Otherwise will be ignored.
+        ProductSpecificMasterData:
+          type: array
+          description: |
+            The array is defined to mention the master data specific to selected payment product
+          items:
+            $ref: '#/components/schemas/ProductSpecificMasterData'
+        PsuData:
+          $ref: '#/components/schemas/PsuData'
+        CommonPaymentData:
+          $ref: '#/components/schemas/BulkPaymentInitiationRequestBasic'
+
+    BulkPaymentInitiationRequestBasic:
+      type: object
+      required:
+        - Payments
+      properties:
+        UsePreAuthentication:
+          type: boolean
+          default: false
+          description: |
+            This field is only applicable for Aspsp which support pre-authentication (see chapter 4 Reach API). It can also be filled in payments toward other Aspsps, but the value will then be ignored.
+            * If set to true the TPP solution will store the pre-authentication token for use with future payments. This will only work if also a PsuId is provided which is stored in the TPP solution.
+            * If set to false the pre-authentication token will only be used to finish one payment. After which it will be discarded.
+        InitiatingPartyReferenceId:
+          maxLength: 36
+          minLength: 1
+          type: string
+          description: |
+            Reference to the payment created by the Initiating Party.
+            This Id will not be visible to the Payment Service User.
+            Required for PSD2 payments
+          example: InitParty ref-id-23457890
+        PreferredScaMethod:
+          type: array
+          description: |
+            Multiple preferred methods can be choosen. It is not guaranteed that the ASPSP will use approach according to the setting. If not filled, no preferred method.
+          items:
+            type: string
+            enum:
+              - Redirect
+              - Decoupled
+              - Embedded
+        TransactionType:
+          type: string
+          description: |
+            Transaction type used in this transaction.
+            ONLINE - Used particularly for Online transactions, e.g. a webshop
+            QR - Used for transactions from a QR. eg. Invoice
+            INSTORE - Used for instore transactions for eg.- a POS device
+            P2P - Used for pear-to-pear (customer-to-customer) transactions, e.g. a Transaction Request
+          enum:
+            - Online
+            - QR
+            - Instore
+            - P2P
+          default: Online
+        ExpirationPeriod:
+          type: integer
+          description: |
+            Time in seconds after which the transaction will expire. If not provided a default value will be used if the `PaymentProduct` equals `IDEAL`. For ONLINE - 1200 and for INSTORE - 120. Required for QR type transactions
+          minimum: 60
+          maximum: 3600
+          exclusiveMinimum: false
+          exclusiveMaximum: false
+        DebtorInformation:
+          $ref: '#/components/schemas/DebtorInformation'
+        ChargeBearer:
+          type: string
+          description: |
+            Charge bearer.
+
+            Note - ISO20022 ChargeBearerType1Code.
+          enum:
+            - DEBT
+            - CRED
+            - SHAR
+            - SLEV
+        CategoryPurpose:
+          type: string
+          description: |
+            Specifies the high level purpose of the instruction based on a set of pre-defined categories. This is used by the initiating party to provide information concerning the processing of the payment. It is likely to trigger special processing by any of the agents involved in the payment chain.
+          enum:
+            - CASH
+            - CORT
+            - DVPM
+            - INTC
+            - TREA
+        PaymentContext:
+          $ref: '#/components/schemas/RiskInformation'
+        Payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/BulkPaymentsDetails'
+      description: |
+        Basic type for Bulk Payment Initiation Request
+
+    PaymentCancellationRequest:
+      type: object
+      properties:
+        PsuData:
+          $ref: '#/components/schemas/PsuDataIdentification'
+
+    PaymentInitiationResponse:
+      type: object
+      properties:
+        CommonPaymentData:
+          $ref: '#/components/schemas/CommonPaymentDataResponse'
+        Links:
+          $ref: '#/components/schemas/InitiationResponseLinks'
+        UseWaitingScreen:
+          type: boolean
+          description: |
+            if `true` the IP should show a waiting screen even if the the RedirectUrl is provided. On the waiting screen a redirection button should be placed. Click on the button should redirect the Psu by the link from `RedirectUrl`
+      description: |
+        Payment Initiation Response
+
+    CommonPaymentDataResponse:
+      type: object
+      required:
+        - PaymentId
+        - PaymentStatus
+      properties:
+        ExpiryDateTimestamp:
+          type: string
+          format: date-time
+          description: |
+            The timestamp from which the transaction operation will expire
+            in [ISODateTime standard](https://fra01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.iso20022.org%2Fstandardsrepository%2Ftype%2FISODateTime&amp;data=04%7C01%7C%7Cfbb23090081a480b7a3d08d9b400c8be%7Cfda9decfe89243ac9d9f1a493f9f98d0%7C0%7C0%7C637738737723666358%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=%2B1kb52Zw5Hz4IPL%2F68GfxsVIOFGFKtXr2jQmePlRzxw%3D&amp;reserved=0), expressed in UTC time format(YYYY-MM-DDThh:mm:ss.sssZ)
+        GuaranteedAmount:
+          description: |
+            The amount guaranteed by the ASPSP/Issuer to the Merchant/CPSP. Will be provided if the min max amount values are defined in the request
+          pattern: ^\d{1,13}\.\d{1,5}$
+          type: string
+          example: "123.45"
+        PaymentStatus:
+          $ref: '#/components/schemas/PaymentStatusEnum'
+        PaymentId:
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: |
+            Id generated by the TPP solution. This should be used to
+            refer to this payment in subsequent api calls.
+        AspspPaymentId:
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: |
+            Id used by the ASPSP/AccessPoint to refer to the payment.
+        AspspId:
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: |
+            Id of the ASPSP selected by the Psu.
+        InitiatingPartyReferenceId:
+          maxLength: 36
+          minLength: 1
+          type: string
+          description: |
+            Reference to the payment created by the Initiating Party.
+            This Id will not be visible to the Payment Service User.
+        FundsAvailable:
+          type: boolean
+          description: |
+            Information whether sufficient funding is available.
+        DebtorInformation:
+          $ref: '#/components/schemas/DebtorInformationResponse'
+        AmountRelatedDetails:
+          $ref: '#/components/schemas/AmountRelatedDetails'
+        AuthorisationRequiredData:
+          $ref: '#/components/schemas/AuthorisationRequiredData'
+        PsuMessage:
+          maxLength: 1024
+          minLength: 1
+          type: string
+          description: |
+            Text to be displayed to the Psu.
+
+    PeriodRules:
+      required:
+        - Frequency
+        - StartDateTime
+      type: object
+      properties:
+        StartDateTime:
+          type: string
+          description: |
+            Date of first occurence. ISO 8601 DateTime.
+          format: date-time
+        ExecutionRule:
+          type: string
+          description: |
+            Specifies the execution rule to follow in the cases when the
+            computed execution dates cannot be processed (e.g. bank holidays). The
+            default value sent to the ASPSP will be FWNG.
+          enum:
+            - FWNG
+            - PREC
+        EndDate:
+          type: string
+          description: |
+            Optional date for closing the periodic payment. Must be given
+            in ISO LOCAL DATE format.
+        Frequency:
+          type: string
+          description: |
+            Specifies the frequency of the payment in order to compute
+            further execution dates.
+          enum:
+            - DAIL
+            - WEEK
+            - TOWK
+            - MNTH
+            - TOMN
+            - QUTR
+            - SEMI
+            - YEAR
+        DayOfExecution:
+          maximum: 31
+          minimum: 1
+          type: integer
+          description: |
+            Sepcifies the day of execution. Day of the month 1...31. Applicable
+            only for MNTH or higher.
+
+    BulkPaymentsDetails:
+      required:
+        - EndToEndId
+        - Amount
+      type: object
+      description: |
+      properties:
+        EndToEndId:
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: |
+            Unique identification, as assigned by the initiating party,
+            to unambiguously identify the transaction. This
+            identification is passed on, unchanged, throughout the
+            entire end-to-end chain. Usage: The end-to-end
+            identification can be used for reconciliation or to link
+            tasks relating to the transaction. It can be included in
+            several messages related to the transaction.
+            Required for PSD2 payments
+          example: ID-0123456789
+        Amount:
+          $ref: '#/components/schemas/Amount'
+        CreditorInformation:
+          $ref: '#/components/schemas/CreditorInformation'
+        PurposeCode:
+          type: string
+          description: |
+            Specifies the purpose code that resulted in a payment initiation.
+            Fill with a 4 characters code from the ExternalPurpose1Code list published
+            by ISO20022 or use the values ‘Commerce’, ‘Carpark’, ‘Transport’.
+        CrossCurrencyPayments:
+          $ref: '#/components/schemas/CrossCurrencyPayment'
+        RegulatoryReportingCodes:
+          maxItems: 10
+          minItems: 1
+          type: array
+          description: |
+            List of needed regulatory reporting codes for international payments
+          items:
+            $ref: '#/components/schemas/RegulatoryReportingCode'
+          x-DefinitionType: ISO20022
+        RemittanceInformation:
+          maxLength: 140
+          minLength: 1
+          type: string
+          description: |
+            Information supplied to enable the matching of an entry with
+            the items that the transfer is intended to settle. This information
+            will be visible to the Payment Service User.
+        RemittanceInformationStructured:
+          $ref: '#/components/schemas/RemittanceInformationStructured'
+
+    IDEALPayments:
+      type: object
+      properties:
+        UseDebtorToken:
+          type: boolean
+          default: false
+          description: |
+            Identifies whether the debtor token generated by Acceess Point should be used
+        FlowType:
+          type: string
+          enum:
+            - Standard
+            - FastCheckout
+          description: |-
+            Transaction flow which the Merchant/CPSP desires to initiate.
+            * _Standard_ - Used for normal iDEAL transactions.
+            * _FastCheckout_ - Used for initiating the fast checkout flow where the debtor will be requested to provide checkout details which in turn iDEAL provides them to the merchant via a callback eventually.
+          default: Standard
+        ExpectedCheckoutData:
+          $ref: '#/components/schemas/ExpectedCheckoutData'
+
+    ExpectedCheckoutData:
+      type: object
+      description: |
+        By this the Merchant is requesting the checkout data from the Access Point with the finalization of the transaction.
+      properties:
+        DebtorContactDetails:
+          $ref: "#/components/schemas/DebtorContactDetails"
+        ShippingAddress:
+          $ref: "#/components/schemas/AddressRequestData"
+        BillingAddress:
+          $ref: "#/components/schemas/AddressRequestData"
+
+    PaymentDetailedInformation:
+      type: object
+      properties:
+        PaymentProductUsed:
+          $ref: '#/components/schemas/PaymentProductEnum'
+        CommonPaymentData:
+          $ref: '#/components/schemas/CommonPaymentDataResponse'
+        Links:
+          $ref: '#/components/schemas/StatusResponseLinks'
+        UseWaitingScreen:
+          type: boolean
+          description: |
+            if `true` the IP should show a waiting screen even if the the RedirectUrl is provided. On the waiting screen a redirection button should be placed. Click on the button should redirect the Psu by the link from `RedirectUrl`
+      description: |
+        Payment Status Response
+
+    ConfirmationRequest:
+      type: object
+      properties:
+        PsuData:
+          $ref: '#/components/schemas/PsuDataIdentification'
+
+    PaymentIdentificationRequest:
+      type: object
+      properties:
+        PsuData:
+          $ref: '#/components/schemas/PsuDataIdentification'
+
+    PaymentAuthorisationRequest:
+      type: object
+      properties:
+        PsuData:
+          $ref: '#/components/schemas/PsuDataIdentification'
+        PsuCredentials:
+          type: array
+          items:
+            $ref: '#/components/schemas/PsuAuthCredentials'
+
+    PaymentAuthorisationResponse:
+      type: object
+      properties:
+        CommonPaymentData:
+          $ref: '#/components/schemas/CommonPaymentDataAuthorisationResponse'
+        Links:
+          $ref: '#/components/schemas/AuthorisationResponseLinks'
+
+    PaymentAuthorisationUpdateRequest:
+      type: object
+      properties:
+        PsuData:
+          $ref: '#/components/schemas/PsuDataIdentification'
+        PsuCredentials:
+          type: array
+          items:
+            $ref: '#/components/schemas/PsuAuthCredentials'
+        AuthenticationMethodId:
+          type: string
+          description: |
+            Id of the selected method.
+        ScaAuthenticationData:
+          type: string
+          description: |
+            Depending on method. In case of binary data it has to be
+            given base64 encoded.
+
+    CommonPaymentDataAuthorisationResponse:
+      type: object
+      required:
+        - PaymentId
+        - PaymentStatus
+      properties:
+        PaymentId:
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: |
+            Id generated by the TPP solution. This should be used to
+            refer to this payment in subsequent api calls.
+        PaymentStatus:
+          $ref: '#/components/schemas/PaymentStatusEnum'
+        AuthStatus:
+          $ref: '#/components/schemas/AuthStatusEnum'
+        TransactionFees:
+          $ref: '#/components/schemas/TransactionFees'
+        AuthorisationRequiredData:
+          $ref: '#/components/schemas/AuthorisationRequiredData'
+        PsuMessage:
+          maxLength: 1024
+          minLength: 1
+          type: string
+          description: |
+            Text to be displayed to the Psu.
+
+    PaymentConfirmationResponse:
+      description: |
+        PaymentConfirmationResponse
+      type: object
+      properties:
+        CommonPaymentData:
+          $ref: '#/components/schemas/CommonPaymentDataConfirmationResponse'
+        Links:
+          $ref: '#/components/schemas/Links'
+
+    CommonPaymentDataConfirmationResponse:
+      type: object
+      required:
+        - PaymentId
+        - PaymentStatus
+      properties:
+        PaymentId:
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: |
+            Id generated by the TPP solution. This should be used to
+            refer to this payment in subsequent api calls.
+        PaymentStatus:
+          $ref: '#/components/schemas/PaymentStatusEnum'
+        PsuMessage:
+          maxLength: 1024
+          minLength: 1
+          type: string
+          description: |
+            Text to be displayed to the Psu.
+
+    PaymentIdentificationResponse:
+      description: |
+        PaymentIdentificationesponse
+      type: object
+      properties:
+        CommonPaymentData:
+          $ref: '#/components/schemas/CommonPaymentDataIdentificationResponse'
+        Links:
+          $ref: '#/components/schemas/Links'
+
+    CommonPaymentDataIdentificationResponse:
+      type: object
+      required:
+        - PaymentId
+        - PaymentStatus
+      properties:
+        PaymentId:
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: |
+            Id generated by the TPP solution. This should be used to
+            refer to this payment in subsequent api calls.
+        PaymentStatus:
+          $ref: '#/components/schemas/PaymentStatusEnum'
+        AuthStatus:
+          $ref: '#/components/schemas/AuthStatusEnum'
+        PsuMessage:
+          maxLength: 1024
+          minLength: 1
+          type: string
+          description: |
+            Text to be displayed to the Psu.
+
+    PaymentCancellationResponse:
+      type: object
+      properties:
+        CommonPaymentData:
+          $ref: '#/components/schemas/CommonPaymentDataAuthorisationResponse'
+        Links:
+          $ref: '#/components/schemas/InitiationResponseLinks'
+
+    PaymentProductEnum:
+      type: string
+      default: PSD2-SCT
+      description: |
+        Indicates the requested payment method. Since we are not only supporting sepa we use generic terms.
+      enum:
+        - PSD2-SCT
+        - PSD2-Instant
+        - PSD2-Target2
+        - PSD2-Domestic
+        - IDEAL
+
+    ProductSpecificMasterData:
+      type: object
+      required:
+        - ParamName
+        - ParamValue
+      properties:
+        ParamName:
+          type: string
+          minLength: 1
+          maxLength: 250
+          description: |
+            Name of the parameter exactly as required by the payment method.
+        ParamValue:
+          type: string
+          minLength: 1
+          maxLength: 2048
+          description: |
+            Actual value of the parameter.
+
+    PsuData:
+      type: object
+      properties:
+        AspspId:
+          minLength: 1
+          type: string
+          description: |
+            The Id of the ASPSP. The TPP solution needs this
+            information to route the payment, so it has to be either
+            provided in this field or it should be available in Psu
+            management as the preferred bank of the Psu.
+        AspspProductCode:
+          type: string
+          description: |
+            This is describing the ProductCode as defined by the ASPSP.
+        AspspPsuId:
+          type: string
+          example: Psu-12345
+          description: |
+            Psu’s Id at ASPSP. Allows the unique identification of the Psu at
+            the ASPSP.
+        AspspCustomerId:
+          type: string
+          example: Psu-12345
+          description: |
+            Psu’s second Id at ASPSP. Required for some ASPSPs
+        AspspPsuIdType:
+          type: string
+          description: |
+            Type of the Aspsp Psu-ID, needed in scenarios where Psus have
+            several Psu-IDs as access possibility.
+        AspspPsuCorporateId:
+          type: string
+          description: |
+            Identification of a Corporate in the Online Channels.
+        AspspPsuCorporateIdType:
+          type: string
+          description: |
+            This is describing the type of the identification needed by the
+            ASPSP to identify the PsuCorporate-ID content.
+        Country:
+          type: string
+          minLength: 2
+          maxLength: 2
+          pattern: '[A-Z]{2,2}'
+          example: FR
+          description: It is used to select a preferred country that is pre-selected on the bank selection page.
+
+    PsuDataIdentification:
+      properties:
+        AspspPsuId:
+          type: string
+          example: Psu-12345
+          description: |
+            Psu’s Id at ASPSP. Allows the unique identification of the Psu at
+            the ASPSP.
+        AspspCustomerId:
+          type: string
+          example: Psu-12345
+          description: |
+            Psu’s second Id at ASPSP. Required for some ASPSPs
+        AspspPsuIdType:
+          type: string
+          description: |
+            Type of the Aspsp Psu-ID, needed in scenarios where Psus have
+            several Psu-IDs as access possibility.
+        AspspPsuCorporateId:
+          type: string
+          description: |
+            Identification of a Corporate in the Online Channels.
+        AspspPsuCorporateIdType:
+          type: string
+          description: |
+            This is describing the type of the identification needed by the
+            ASPSP to identify the PsuCorporate-ID content.
+
+    PsuBankPreferences:
+      type: object
+      description: |
+        The Psu preferenes details saved in the Psu Management
+      properties:
+        AspspName:
+          type: string
+          description: |
+            The name of the ASPSP/Issuer
+        AspspLogoUrl:
+          type: string
+          description: |
+            the logo url of the ASPSP/Issuer
+        DebtorAccountIdentification:
+          type: string
+          description: |
+            The masked IBAN or any other identifier recognized by the Psu and ASPSP/Issuer
+
+    Amount:
+      type: object
+      properties:
+        Type:
+          type: string
+          description: |-
+            * _Fixed_ - The amount defined by the merchant can not be changed by the user
+            * _Change_ - The amount defined by the merchant can be changed by the user within the defined bounds. Currently can be used only for iDEAL Payments
+            * _Define_ - The amount needs to be defined by the user. Currently can be used only for iDEAL Payments
+          enum:
+            - Fixed
+            - Change
+            - Define
+          default: Fixed
+        Amount:
+          pattern: ^\d{1,13}\.\d{1,5}$
+          type: string
+          description: |
+            Amount of the payment. The decimal separator is a dot.
+          example: "123.45"
+        MaximumAmount:
+          pattern: ^\d{1,13}\.\d{1,5}$
+          type: string
+          description: |-
+            Conditionally used for amount type Change or Define.
+            The value in case of Change should be greater than or equal to the amount value.
+            In case of Fixed, this value will be ignored.
+          example: "1000.00"
+        MinimumAmount:
+          pattern: ^\d{1,13}\.\d{1,5}$
+          type: string
+          description: |-
+            Conditionally used for amount type Change or Define.
+            The value in case of Change should be less than or equal to the amount.
+            In case of Fixed, this value will be ignored.
+          example: "5.00"
+        Currency:
+          pattern: '[A-Z]{3,3}'
+          type: string
+          description: |
+            Currency of the payment. ISO 4217 currency codes should be
+            used. For iDEAL only EUR is possible
+          example: EUR
+          default: EUR
+        AmountBreakdown:
+          $ref: '#/components/schemas/AmountBreakdown'
+
+    AmountBreakdown:
+      type: object
+      description: |-
+        Breakdown of the transaction amount. The sum of all the fields within this breakdown must be equal to the transaction amount. Possible to use for iDEAL payments, only in the FastCheckout flow.
+      required:
+        - OrderAmount
+        - ShippingCost
+      properties:
+        OrderAmount:
+          pattern: ^\d{1,13}\.\d{1,5}$
+          type: string
+          description: |
+            Order amount. Possible to use for iDEAL payments, only in the fast-checkout flow.
+          example: "123.45"
+        ShippingCost:
+          pattern: ^\d{1,13}\.\d{1,5}$
+          type: string
+          description: |
+            Shipping cost. Possible to use for iDEAL payments, only in the fast-checkout flow.
+          example: "123.45"
+
+    AmountRelatedDetails:
+      type: object
+      description: |
+        contains additional information about the fees and estimated amount
+      properties:
+        TransactionFees:
+          $ref: '#/components/schemas/TransactionFees'
+        ExchangeRateInformation:
+          $ref: '#/components/schemas/ExchangeRateInformationResponse'
+        CurrencyConversionFee:
+          $ref: '#/components/schemas/CurrencyConversionFee'
+        EstimatedTotalAmount:
+          $ref: '#/components/schemas/EstimatedTotalAmount'
+        EstimatedInterbankSettlementAmount:
+          $ref: '#/components/schemas/EstimatedInterbankSettlementAmount'
+
+    DebtorInformation:
+      type: object
+      description: |
+        All debtor relavant data
+      properties:
+        Name:
+          maxLength: 140
+          type: string
+          description: |
+            The name of the debtor.
+        Agent:
+          type: string
+          pattern: '[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}'
+          description: |
+            BIC of the financial institution servicing an account for
+            the debtor.
+        Account:
+          $ref: '#/components/schemas/DebtorAccount'
+        UltimateDebtor:
+          maxLength: 140
+          type: string
+          description: |
+            Ultimate party that owes an amount of money to the (ultimate)
+            creditor.
+        ShippingAddress:
+          $ref: '#/components/schemas/AddressData'
+        BillingAddress:
+          $ref: '#/components/schemas/BillingAddress'
+
+    DebtorAccount:
+      required:
+        - Identification
+      type: object
+      properties:
+        SchemeName:
+          $ref: '#/components/schemas/IdentificationTypeEnum'
+        Identification:
+          type: string
+          description: |
+            Unambiguous identification of the account of the debtor to
+            which a debit entry will be made as a result of the transaction.
+        SecondaryIdentification:
+          type: string
+          description: |
+            Secondary identification of the Debtor Account, to which a
+            debit entry will be made as a result of the transaction. (Only Openbank
+            UK)
+        Currency:
+          pattern: '[A-Z]{3,3}'
+          type: string
+          description: |
+            A code allocated to a currency by a Maintenance Agency under
+            an international identification scheme, as described in the latest edition
+            of the international standard ISO 4217 "Codes for the representation of
+            currencies and funds".
+
+    DebtorInformationResponse:
+      type: object
+      description: |
+        All debtor relavant data
+      properties:
+        Name:
+          maxLength: 140
+          type: string
+          description: |
+            The name of the debtor.
+        Agent:
+          type: string
+          pattern: '[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}'
+          description: |
+            BIC of the financial institution servicing an account for
+            the creditor.
+        Account:
+          $ref: '#/components/schemas/DebtorAccount'
+        ContactDetails:
+          $ref: "#/components/schemas/DebtorContactDetailsResponse"
+        ShippingAddress:
+          $ref: "#/components/schemas/AddressData"
+        BillingAddress:
+          $ref: "#/components/schemas/AddressData"
+
+    CreditorInformation:
+      type: object
+      description: |
+        All creditor relavant data
+      properties:
+        InitiatingPartySubId:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: |
+            External identification of the subsidiary initiating party.
+        Name:
+          type: string
+          description: |
+            The name of creditor. Can be given for P2P payments only.
+        Account:
+          $ref: '#/components/schemas/CreditorAccount'
+        Agent:
+          pattern: '[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}'
+          type: string
+          description: |
+            BIC of the financial institution servicing an account for
+            the creditor.
+        UltimateCreditor:
+          maxLength: 140
+          type: string
+          description: |
+            Ultimate party to which an amount of money is due.
+        PostalAddress:
+          $ref: '#/components/schemas/AddressData'
+        CreditorDateAndPlaceOfBirth:
+          $ref: '#/components/schemas/CreditorDateAndPlaceOfBirth'
+
+    CreditorAccount:
+      type: object
+      properties:
+        SecondaryIdentification:
+          type: string
+          description: |
+            Secondary identification of the Creditor Account, to which
+            a credit entry will be made as a result of the transaction. (Only Openbank
+            UK)
+        SchemeName:
+          $ref: '#/components/schemas/IdentificationTypeEnum'
+        Identification:
+          type: string
+          description: |
+            Identification of the Creditor Account. Can be given for P2P
+            payments only.
+        Currency:
+          pattern: '[A-Z]{3,3}'
+          type: string
+          description: |
+            A code allocated to a currency by a Maintenance Agency under
+            an international identification scheme, as described in the latest edition
+            of the international standard ISO 4217 "Codes for the representation of
+            currencies and funds".
+
+    IdentificationTypeEnum:
+      type: string
+      description: |
+        Type of the account number.
+      enum:
+        - IBAN
+        - SortCodeAccountNumber
+
+    AuthorisationRequiredData:
+      type: object
+      description: |
+        The data required for Psu authentication and transaction authorisation
+      properties:
+        PsuCredentials:
+          type: array
+          description: |
+            List of credential ids. Since it will be implemented we need to use this group for providing an identificators of user credential for the merchant. Merchant need to use this ids while providing to TPP the Psu’s username and the password.
+          items:
+            $ref: '#/components/schemas/PsuCredentials'
+        ScaMethods:
+          type: array
+          description: |
+            Array of available ScaMethods.
+          items:
+            $ref: '#/components/schemas/ScaMethods'
+        ChosenScaMethod:
+          $ref: '#/components/schemas/ScaMethods'
+        ChallengeData:
+          $ref: '#/components/schemas/ScaChallengeData'
+
+    ScaMethods:
+      required:
+        - AuthenticationId
+        - AuthenticationType
+      type: object
+      properties:
+        AuthenticationType:
+          $ref: '#/components/schemas/ScaMethodEnum'
+        AuthenticationId:
+          minLength: 1
+          type: string
+          description: |
+            Id of the method. (To be used in PUT request.)
+        Version:
+          minLength: 1
+          type: string
+          description: |
+            Version of the method.
+        Name:
+          minLength: 1
+          type: string
+          description: |
+            Name of the method in readable form.
+        Explanation:
+          minLength: 1
+          type: string
+          description: |
+            Description of the method.
+
+    ScaMethodEnum:
+      type: string
+      description: |
+        SCA authentication methods.
+      enum:
+        - SmsOTP
+        - ChipOTP
+        - PhotoOTP
+        - PushOTP
+        - SmtpOTP
+
+    ScaChallengeData:
+      type: object
+      properties:
+        AdditionalInformation:
+          type: string
+          description: |
+            Additional Information for the Psu describing the method
+        Data:
+          type: array
+          description: |
+            A collection of strings as challenge data
+          items:
+            type: string
+        Image:
+          type: string
+          description: |
+            Image in base64 encoding
+        ImageLink:
+          type: string
+          description: |
+            URL of image
+        OtpFormat:
+          type: string
+          description: |
+            The OTP format.
+        OtpMaxLength:
+          type: integer
+          description: |
+            The maximum length for the OTP.
+          format: int32
+      description: |
+        JSON DTO used to represent challenge data.
+
+    PsuCredentials:
+      required:
+        - CredentialsDetails
+      type: object
+      properties:
+        AspspProductCode:
+          type: string
+          description: |
+            Product Identification. Used to contextualize the credentials
+            provided by the Psu for those ASPSP that need of it.
+        CredentialsDetails:
+          type: array
+          description: Credentials Details
+          items:
+            $ref: '#/components/schemas/CredentialDetails'
+      description: |
+        Psu Credentials on the Bank system.
+
+    CredentialDetails:
+      required:
+        - CredentialId
+        - IsSecret
+        - LabelList
+      type: object
+      properties:
+        IsSecret:
+          type: boolean
+          description: |
+            Binary identification of the transparancy of the provided
+            credentials by the Psu. Can have 2 values,
+            * true
+            * false
+
+            Can be provided by ASPSP. If not provided by the
+            ASPSP then by default,
+            * true, if the CredentialId=ewl-password
+            * false, if CredentialId=ewl-user-id
+        CredentialId:
+          type: string
+          description: |
+            Credential detail identification of the Psu credential at the
+            bank (provided bi CBI if approach is Embedded). If not provided
+            by the aspsp, then default values should be,
+            * ewl-user-id, when IsSecret=false
+            * ewl-password, when IsSecret=true
+        LabelList:
+          type: array
+          description: |
+            The list of the labels to show to the end user. They are
+            internationalized.
+          items:
+            $ref: '#/components/schemas/CredentialLabel'
+      description: |
+        Credentials Details.
+
+    PsuAuthCredentials:
+      type: object
+      required:
+        - CredentialId
+        - CredentialValue
+      properties:
+        CredentialId:
+          type: string
+          description: |
+            CredentialId as retrieved in the response of the previous request.
+        CredentialValue:
+          type: string
+          description: |
+            Value of the credential.
+
+    CredentialLabel:
+      required:
+        - Label
+        - Language
+      type: object
+      properties:
+        Label:
+          type: string
+          description: |
+            The label associated to the credentials to show to the end
+            user.
+        Language:
+          type: string
+          description: |
+            Label internationalization. It specifies the language of the
+            label. The default value is EN
+
+    DebtorContactDetails:
+      type: object
+      title: DebtorContactDetailsRequestData
+      properties:
+        PhoneNumber:
+          type: boolean
+          description: |
+            Request to provide the phone number of the debtor in E.164 format
+          example: true
+          default: false
+        Email:
+          type: boolean
+          description: |
+            Request to provide the e-mail address of the debtor
+          example: true
+          default: false
+
+    DebtorContactDetailsResponse:
+      type: object
+      properties:
+        PhoneNumber:
+          type: string
+          description: |
+            The phone number of the debtor in E.164 format
+          pattern: "^\\+[1-9][0-9]{1,14}$"
+          example: "+31612345678"
+        Email:
+          type: string
+          description: |
+            The e-mail address of the debtor
+          format: email
+          example: "bob.smith@mymail.com"
+          minLength: 1
+
+    AddressRequestData:
+      type: object
+      title: AddressRequestData
+      properties:
+        FirstName:
+          type: boolean
+          description: |
+            Request to provide the first name of the debtor
+          example: true
+          default: false
+        LastName:
+          type: boolean
+          description: |
+            Request to provide the last name of the debtor
+          example: true
+          default: false
+        CompanyName:
+          type: boolean
+          description: |
+            Request to provide the company name of the debtor
+          example: true
+          default: false
+        PostCode:
+          type: boolean
+          description: |
+            Request to provide the postal code of the address without spaces
+          example: true
+          default: false
+        BuildingNumber:
+          type: boolean
+          description: |
+            Request to provide the house number of the address
+          example: true
+          default: false
+        Floor:
+          type: boolean
+          description: |
+            Request to provide the addition of the address
+          example: true
+          default: false
+        StreetName:
+          type: boolean
+          description: |
+            Request to provide the street of the address
+          example: true
+          default: false
+        TownName:
+          type: boolean
+          description: |
+            Request to provide the city of the address
+          example: true
+          default: false
+        Country:
+          type: boolean
+          description: |
+            Request to provide name of the country
+          example: true
+          default: false
+
+    AddressData:
+      type: object
+      properties:
+        FirstName:
+          type: string
+          description: |
+            The first name of the debtor
+          example: "Bob"
+          minLength: 1
+        LastName:
+          type: string
+          description: |
+            The last name of the debtor
+          example: "Smith"
+          minLength: 1
+        CompanyName:
+          type: string
+          description: |
+            The company name of the debtor
+          example: "Cookie factory"
+          minLength: 1
+        PostCode:
+          type: string
+          description: |
+            The postal code of the address without spaces
+          example: "1234AB"
+          minLength: 1
+        BuildingNumber:
+          type: string
+          description: |
+            The house number of the address
+          example: "100"
+          minLength: 1
+        Floor:
+          type: string
+          description: |
+            The addition of the address
+          example: "2B"
+          minLength: 1
+        StreetName:
+          type: string
+          description: |
+            The street of the address
+          example: "Bankastraat"
+          minLength: 1
+        TownName:
+          type: string
+          description: |
+            The city of the address
+          example: "Amsterdam"
+          minLength: 1
+        Country:
+          type: string
+          description: |
+            The code of the coutry regarding ISO 3166 standard. For the IDEAL payments the country name will be provided
+          minLength: 1
+        CountrySubDivision:
+          type: string
+          description: |
+            Country sub division.
+          maxLength: 35
+          minLength: 1
+
+    BillingAddress:
+      type: object
+      properties:
+        SameAsShippingAddress:
+          type: boolean
+          default: true
+          description: |
+            Indicates whether the billing addess is the same with shipping address. If true the information provided under `BillingAddressDetails` will be ignored
+        BillingAddressDetails:
+          $ref: '#/components/schemas/AddressData'
+
+    CreditorDateAndPlaceOfBirth:
+      required:
+        - BirthDate
+        - CityOfBirth
+        - CountryOfBirth
+      type: object
+      properties:
+        BirthDate:
+          type: string
+          description: Date on which a person is born.
+          format: date
+        CityOfBirth:
+          maxLength: 35
+          type: string
+          description: City where a person was born.
+        CountryOfBirth:
+          pattern: '^[A-Z]{2,2}$'
+          type: string
+          description: Country where a person was born.
+      description: |
+        Date and place of birth of a person.
+        This information must be requested for detection of Fraud, Money-Laundering and Terrorism Financing in case of international payment.
+      x-DefinitionType: ISO20022
+
+    PaymentStatusEnum:
+      type: string
+      description: |
+        Payment status.
+      enum:
+        - Open
+        - Authorised
+        - PartiallyAuthorised
+        - Pending
+        - SettlementInProcess
+        - SettlementCompleted
+        - ReceivedByCreditorBank
+        - ReceivedOnCreditorAccount
+        - Cancelled
+        - CancelledAtTPP
+        - Error
+        - Expired
+
+    AuthStatusEnum:
+      description: |
+        This data element is containing information about the status of the SCA method applied.
+
+        The following codes are defined for this data type.
+
+          * 'Received':
+            An authorisation or cancellation-authorisation resource has been created successfully.
+          * 'PsuIdentified':
+            The Psu related to the authorisation or cancellation-authorisation resource has been identified.
+          * 'PsuAuthenticated':
+            The Psu related to the authorisation or cancellation-authorisation resource has been identified and authenticated e.g. by a password or by an access token.
+          * 'ScaMethodSelected':
+            The Psu/TPP has selected the related SCA routine.
+            If the SCA method is chosen implicitly since only one SCA method is available,
+            then this is the first status to be reported instead of 'received'.
+          * 'Started':
+            The addressed SCA routine has been started.
+          * 'Finalised':
+            The SCA routine has been finalised successfully.
+          * 'Failed':
+            The SCA routine failed
+          * 'Exempted':
+            SCA was exempted for the related transaction, the related authorisation is successful.
+          * 'Unconfirmed':
+                      SCA is technically successfully finalised by the Psu, but the authorisation resource needs a confirmation command by the TPP yet.
+      type: string
+      enum:
+        - "Received"
+        - "PsuIdentified"
+        - "PsuAuthenticated"
+        - "ScaMethodSelected"
+        - "Started"
+        - "Finalised"
+        - "Failed"
+        - "Exempted"
+        - "Unconfirmed"
+
+    RiskInformation:
+      type: object
+      properties:
+        PaymentContextCode:
+          type: string
+          description: |
+            Specifies the payment context. Payments for EcommerceGoods
+            and EcommerceServices will be expected to have a MerchantCategoryCode
+            and MerchantCustomerIdentification populated. Payments for EcommerceGoods
+            will also have the DeliveryAddress populated.
+          enum:
+            - BillPayment
+            - ContactlessTravel
+            - EcommerceGoods
+            - EcommerceServices
+            - Kiosk
+            - Parking
+            - P2P
+        MerchantCategoryCode:
+          maxLength: 4
+          minLength: 3
+          type: string
+          description: |
+            Category code conform to ISO 18245, related to the type of
+            services or goods the merchant provides for the transaction.
+        MerchantCustomerId:
+          maxLength: 70
+          minLength: 1
+          type: string
+          description: |
+            The unique customer identifier of the Psu with the merchant.
+        DeliveryAddress:
+          $ref: '#/components/schemas/AddressData'
+        ChannelType:
+          type: string
+          description: |
+            Payment channel type.
+          enum:
+            - ContactLess
+            - PointOfSale
+            - Ecommerce
+            - UnattendedTerminal
+        ChannelMetaData:
+          type: string
+          description: |
+            Additional information related to the channel.
+        AppliedAuthenticationApproach:
+          type: string
+          description: |
+            Indicates the Applied Authentication Approach
+          enum:
+            - CA
+            - SCA
+        ReferencePaymentOrderId:
+          type: string
+          description: |
+            Indicates the Applied Authentication Approach
+          maxLength: 128
+      description: |
+        Information used for risk scoring by the ASPSP.
+
+    TransactionFees:
+      type: object
+      properties:
+        Currency:
+          pattern: '[A-Z]{3,3}'
+          type: string
+          description: |
+            A code allocated to a currency by a Maintenance Agency under
+            an international identification scheme, as described in the latest edition
+            of the international standard ISO 4217 "Codes for the representation of
+            currencies and funds".
+        Amount:
+          pattern: ^\d{1,13}\.\d{1,5}$
+          type: string
+          description: |
+            Amount of the fees.
+        FeesApply:
+          type: boolean
+          default: false
+          description: |
+            Indicates if transaction fees are applicable on the payment.
+      description: |
+        Information used for transporting transaction fees by the ASPSP.
+
+    CurrencyConversionFee:
+      type: object
+      required:
+        - Currency
+        - Amount
+      properties:
+        Currency:
+          pattern: '[A-Z]{3,3}'
+          type: string
+          description: |
+            A code allocated to a currency by a Maintenance Agency under
+            an international identification scheme, as described in the latest edition
+            of the international standard ISO 4217 "Codes for the representation of
+            currencies and funds".
+        Amount:
+          pattern: ^\d{1,13}\.\d{1,5}$
+          type: string
+          description: |
+            Amount of the fees.
+      description: |
+        Currency Conversion Fee
+
+    CrossCurrencyPayment:
+      type: object
+      required:
+        - CrossCurrencyTransaction
+      properties:
+        CrossCurrencyTransaction:
+          type: boolean
+          default: false
+          description: |
+            Set to true if a currency exchangeis required. If set to true the ExchangeRateInformation section can be used.
+        ExchangeRateInformation:
+          $ref: '#/components/schemas/ExchangeRateInformationRequest'
+
+    ExchangeRateInformationRequest:
+      type: object
+      properties:
+        UnitCurrency:
+          pattern: '[A-Z]{3,3}'
+          type: string
+          description: |
+            Currency in which the rate of exchange is expressed in a currency
+            exchange. In the example 1GBP = xxxCUR, the unit currency is GBP.
+        ExchangeRate:
+          type: number
+          description: |
+            The factor used for conversion of an amount from one currency
+            to another. This reflects the price at which one currency was bought with
+            another currency. Rate expressed as a decimal, for example, 0.7 is 7/10
+            and 70%.
+        RateType:
+          type: string
+          description: |
+            Specifies the type used to complete the currency exchange.
+            * Spot: Exchange rate applied is the spot rate.
+            * Sale: Exchange rate applied is the market rate at the time of the sale.
+            * Agreed: Exchange rate applied is the rate agreed between the parties.
+          enum:
+            - Spot
+            - Sale
+            - Agreed
+        ContractIdentification:
+          maxLength: 256
+          type: string
+          description: |
+            Unique and unambiguous reference to the foreign exchange contract
+            agreed between the initiating party/creditor and the debtor agent.
+      description: |
+        Provides details on the currency exchange rate and contract.
+
+    ExchangeRateInformationResponse:
+      type: object
+      properties:
+        UnitCurrency:
+          pattern: '[A-Z]{3,3}'
+          type: string
+          description: |
+            Currency in which the rate of exchange is expressed in a currency
+            exchange. In the example 1GBP = xxxCUR, the unit currency is GBP.
+        ExchangeRate:
+          type: number
+          description: |
+            The factor used for conversion of an amount from one currency
+            to another. This reflects the price at which one currency was bought with
+            another currency. Rate expressed as a decimal, for example, 0.7 is 7/10
+            and 70%.
+        RateType:
+          type: string
+          description: |
+            Specifies the type used to complete the currency exchange.
+            * Spot: Exchange rate applied is the spot rate.
+            * Sale: Exchange rate applied is the market rate at the time of the sale.
+            * Agreed: Exchange rate applied is the rate agreed between the parties.
+          enum:
+            - Spot
+            - Sale
+            - Agreed
+        ContractIdentification:
+          maxLength: 256
+          minLength: 1
+          type: string
+          description: |
+            Unique and unambiguous reference to the foreign exchange contract
+            agreed between the initiating party/creditor and the debtor agent.
+        ExpirationDateTime:
+          type: string
+          description: |
+            Expiration date time. ISO 8601 DateTime.
+          format: date-time
+      description: |
+        Provides details on the currency exchange rate and contract.
+
+    EstimatedTotalAmount:
+      type: object
+      required:
+        - Currency
+        - Amount
+      properties:
+        Currency:
+          pattern: '[A-Z]{3,3}'
+          type: string
+          description: |
+            A code allocated to a currency by a Maintenance Agency under
+            an international identification scheme, as described in the latest edition
+            of the international standard ISO 4217 "Codes for the representation of
+            currencies and funds".
+        Amount:
+          pattern: ^\d{1,13}\.\d{1,5}$
+          type: string
+          description: |
+            Amount
+      description: |
+        Estimated Total Amount.
+
+    EstimatedInterbankSettlementAmount:
+      type: object
+      required:
+        - Currency
+        - Amount
+      properties:
+        Currency:
+          pattern: '[A-Z]{3,3}'
+          type: string
+          description: |
+            A code allocated to a currency by a Maintenance Agency under
+            an international identification scheme, as described in the latest edition
+            of the international standard ISO 4217 "Codes for the representation of
+            currencies and funds".
+        Amount:
+          pattern: ^\d{1,13}\.\d{1,5}$
+          type: string
+          description: |
+            Amount
+      description: |
+        Estimated Interbank Settlement Amount.
+
+    RegulatoryReportingCode:
+      maxLength: 10
+      type: string
+      description: |
+        Information needed due to regulatory and statutory requirements.
+        Economical codes to be used are provided by the National Competent Authority
+      x-DefinitionType: ISO20022
+
+    RemittanceInformationStructured:
+      required:
+        - Reference
+      type: object
+      properties:
+        Reference:
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: |
+            The actual reference.
+        ReferenceType:
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: |
+            Reference type.
+        ReferenceIssuer:
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: |
+            Identification of the issuer of the ReferenceType.
+
+    InitiationResponseLinks:
+      type: object
+      description: |
+        A list of hyperlinks to be recognized by the Initiating Party. The actual
+        hyperlinks used in the response depend on the dynamical decisions on
+        authorization approach for example. Remark - All links are full links.
+        * 'PreAuthenticationForEmbedded': In case of an embedded pre-authentication required by the ASPSP, the Initiating Party has to use this link.
+        * 'RedirectUrl': In case of an Redirect approach, the Initiating Party has to use this link to redirect the Psu’s browser session.
+        * 'PostAuthorisationForExplicit': In case the ASPSP requires explicit start of authorization.
+        * 'PostIdentificationForDecoupled': In case of a Decoupled approach, identification of the Psu required to start the decoupled authorization.
+        * 'PostAuthorisationForEmbedded': In case of an embedded approach, endpoint to be called to start the embedded authorization.
+        * 'SelectAuthenticationMethod': In case of an embedded approach, the Initiating Party has to use this link to pass the SCA method.
+        * 'AuthorizeTransaction': In case of an embedded approach, the Initiating Party has to authorize the payment by providing the SCA OneTimePassword.
+        * 'ConfirmationRequired': Endpoint to be called for payment confirmation for ASPSPs that require explicit confirmation of payments.
+        * 'GetPaymentStatus': Endpoint to be called for retrieving the payment status.
+      properties:
+        PreAuthenticationForEmbedded:
+          $ref: '#/components/schemas/Link'
+        RedirectUrl:
+          $ref: '#/components/schemas/Link'
+        PostAuthorisationForExplicit:
+          $ref: '#/components/schemas/Link'
+        PostIdentificationForDecoupled:
+          $ref: '#/components/schemas/Link'
+        PostAuthorisationForEmbedded:
+          $ref: '#/components/schemas/Link'
+        SelectAuthenticationMethod:
+          $ref: '#/components/schemas/Link'
+        AuthorizeTransaction:
+          $ref: '#/components/schemas/Link'
+        ConfirmationRequired:
+          $ref: '#/components/schemas/Link'
+        GetPaymentStatus:
+          $ref: '#/components/schemas/Link'
+
+    StatusResponseLinks:
+      type: object
+      description: |
+        A list of hyperlinks to be recognized by the Initiating Party. The actual
+        hyperlinks used in the response depend on the dynamical decisions on
+        authorization approach for example. Remark - All links are full links.
+
+        * 'RedirectUrl': In case of an Redirect approach, the Initiating Party has to use this link to redirect the Psu’s browser session.
+        * 'PostAuthorisationForExplicit': In case the ASPSP requires explicit start of authorization.
+        * 'PostIdentificationForDecoupled': In case of a Decoupled approach, identification of the Psu required to start the decoupled authorization.
+        * 'PutAuthorisationForEmbedded': In case of an embedded approach, endpoint to be called to add information to the Authorization.
+        * 'SelectAuthenticationMethod': In case of an embedded approach, the Initiating Party has to use this link to pass the SCA method.
+        * 'AuthorizeTransaction': In case of an embedded approach, the Initiating Party has to authorize the payment by providing the SCA OneTimePassword.
+        * 'ConfirmationRequired': Endpoint to be called for payment confirmation for ASPSPs that require explicit confirmation of payments.
+      properties:
+        RedirectUrl:
+          $ref: '#/components/schemas/Link'
+        PostAuthorisationForExplicit:
+          $ref: '#/components/schemas/Link'
+        PostIdentificationForDecoupled:
+          $ref: '#/components/schemas/Link'
+        PostAuthorisationForEmbedded:
+          $ref: '#/components/schemas/Link'
+        PutAuthorisationForEmbedded:
+          $ref: '#/components/schemas/Link'
+        SelectAuthenticationMethod:
+          $ref: '#/components/schemas/Link'
+        AuthorizeTransaction:
+          $ref: '#/components/schemas/Link'
+        ConfirmationRequired:
+          $ref: '#/components/schemas/Link'
+
+    AuthorisationResponseLinks:
+      type: object
+      description: |
+        A list of hyperlinks to be recognized by the Initiating Party. The actual
+        hyperlinks used in the response depend on the dynamical decisions on
+        authorization approach for example. Remark - All links are full links.
+        * 'RedirectUrl': In case of an Redirect approach, the Initiating Party has to use this link to redirect the Psu’s browser session.
+        * 'PutAuthorisationForEmbedded': In case of an embedded approach, endpoint to be called to start the embedded authorization.
+        * 'SelectAuthenticationMethod': In case of an embedded approach, the Initiating Party has to use this link to pass the SCA method.
+        * 'AuthorizeTransaction': In case of an embedded approach, the Initiating Party has to authorize the payment by providing the SCA OneTimePassword.
+        * 'ConfirmationRequired': Endpoint to be called for payment confirmation for ASPSPs that require explicit confirmation of payments.
+        * 'GetPaymentStatus': Endpoint to be called for retrieving the payment status.
+      properties:
+        RedirectUrl:
+          $ref: '#/components/schemas/Link'
+        PutAuthorisationForEmbedded:
+          $ref: '#/components/schemas/Link'
+        SelectAuthenticationMethod:
+          $ref: '#/components/schemas/Link'
+        AuthorizeTransaction:
+          $ref: '#/components/schemas/Link'
+        ConfirmationRequired:
+          $ref: '#/components/schemas/Link'
+        GetPaymentStatus:
+          $ref: '#/components/schemas/Link'
+
+    Links:
+      type: object
+      description: |
+        A list of hyperlinks to be recognized by the Initiating Party. The actual
+        hyperlinks used in the response depend on the dynamical decisions on
+        authorization approach for example. Remark - All links are full links.
+
+        * 'GetPaymentStatus': Endpoint to be called for retrieving the payment status.
+      properties:
+        GetPaymentStatus:
+          $ref: '#/components/schemas/Link'
+
+    Link:
+      required:
+        - Href
+      type: object
+      properties:
+        Href:
+          maxLength: 1024
+          minLength: 1
+          type: string
+
+    Error:
+      required:
+        - Code
+        - Message
+      type: object
+      properties:
+        Code:
+          pattern: '[0-9]{1,3}'
+          type: string
+        Message:
+          maxLength: 140
+          minLength: 1
+          type: string
+        Details:
+          type: string
+        Link:
+          $ref: '#/components/schemas/Link'
+      description: |
+        |HTTP Status|Code |Description
+        |-----------|-----|---------------------------------------
+        |400        |001  |The paymentId, consentId and preAuthId are all null or empty
+        |           |001  |The paymentId and the consent cannot set both in the request
+        |           |102  |Initiating Party is inactive
+        |401        |     |Missing or expired IP Token
+        |404        |136  |Consent not found
+        |           |150  |Pre-Authentication token not found
+        |500        |004  |An internal error occurred
+        |           |015  |The upstream server reports an error
+        |503        |016  |Request limit of the upstram server exceeded
+        |511        |014  |Server Authentication failed
+
+  headers:
+    X-Request-ID:
+      required: true
+      description: |
+        UUID for unique request identification
+      schema:
+        type: string
+        maxLength: 36
+        minLength: 1
+      example: abcdef2e-3000-4000-88cc-ae40e3b113d7
+
+    MessageCreateDateTime:
+      required: true
+      schema:
+        type: string
+        format: 'date-time'
+      description: |
+        The message create date time.
+
+        ISO 8601 DateTime.
+      example: "2020-09-25T08:15:00.856Z"
+
+    Signature:
+      required: false
+      description: |
+        Required for IDEAL payemnts
+      schema:
+        type: string
+    Digest:
+      description: Is contained if and only if the `Signature` element is contained in the header of the request.
+      schema:
+        type: string
+      example: "SHA-256=hl1/Eps8BEQW58FJhDApwJXjGY4nr1ArGDHIT25vq6A="
+
+  parameters:
+    AppRedirectPreferred:
+      name: AppRedirectPreferred
+      in: header
+      schema:
+        type: boolean
+        default: false
+      description: |
+        Indicates whether the user uses mobile device\tablet or PC
+
+    paymentId:
+      name: paymentId
+      in: path
+      description: |
+        The Id used by the TPP solution to refer to a payment.
+
+        Optionally the payment can also be refered by the **InitiatingPartyReferenceId** or the **EndToEndId**, to do so start with **ref** or **e2e** prefixes followed by the respective identifier.
+      required: true
+      schema:
+        type: string
+      example: 486215
+
+    authorisationId:
+      name: authorisationId
+      in: path
+      required: true
+      schema:
+        type: string
+      example: aid-4846
+      description: |
+        The Id used by the TPP solution to refer to an authorisation resource.
+
+    Psuid:
+      name: Psuid
+      in: path
+      description: |
+        The Id of the Psu registered at TPP solution
+      required: true
+      schema:
+        type: string
+      example: 12345
+
+    AspspPsuId:
+      name: AspspPsuId
+      in: header
+      description: |
+        Psu’s Id at ASPSP. Allows the unique identification of the Psu at
+        the ASPSP.
+      schema:
+        type: string
+      example: Psu-12345
+
+    AspspPsuIdType:
+      name: AspspPsuIdType
+      in: header
+      description: |
+        Type of the Aspsp Psu-ID, needed in scenarios where Psus have
+        several Psu-IDs as access possibility.
+      schema:
+        type: string
+
+    AspspPsuCorporateId:
+      name: AspspPsuCorporateId
+      in: header
+      description: |
+        Identification of a Corporate in the Online Channels.
+      schema:
+        type: string
+
+    AspspPsuCorporateIdType:
+      name: AspspPsuCorporateIdType
+      in: header
+      description: |
+        This is describing the type of the identification needed by the
+        ASPSP to identify the PsuCorporate-ID content.
+      schema:
+        type: string
+
+    confirm:
+      name: confirm
+      in: query
+      description: |
+        If set to 'true' the transaction will be immediately confirmed
+        by the TPP solution if the status reported by the ASPSP is 'AUTHORISED'.
+      schema:
+        type: string
+
+    X-Request-ID:
+      name: X-Request-ID
+      in: header
+      description: |
+        UUID for unique request identification.
+      required: true
+      schema:
+        maxLength: 36
+        minLength: 1
+        type: string
+      example: "abcdef2e-3000-4000-88cc-ae40e3b113d7"
+
+    MessageCreateDateTime:
+      name: MessageCreateDateTime
+      in: header
+      description: |
+        The message create date time.
+
+        ISO 8601 DateTime.
+      required: true
+      schema:
+        type: string
+        format: date-time
+      example: "2020-09-25T08:15:00.856Z"
+
+    InitiatingPartyReturnUrl:
+      name: InitiatingPartyReturnUrl
+      in: header
+      description: |
+        The callback URL for the redirection back to the initiating party
+        after authorization.
+      schema:
+        maxLength: 4000
+        minLength: 1
+        type: string
+        default: As defined in PIS subscription.
+
+    UseAuthorisationLandingPages:
+      name: UseAuthorisationLandingPages
+      in: header
+      schema:
+        type: boolean
+        default: false
+      description: |
+        If true, Initiation Service pages will be used to request required information from Psu directly
+    Locale:
+      name: Locale
+      in: header
+      schema:
+        type: string
+      description: |
+        2-digit ISO-639 code for the language in which the Initiation Service pages are displayed.
+
+        For special languages can be used 5-digit code like nl-BE, where first is ISO-639 langauge code and the second is ISO-3166 country code.
+
+        If not set, the language of the Initiation Service pages is taken over from the end user’s browser configuration or the system configuration of the Initiation Service server.
+
+    PsuId:
+      name: PsuId
+      in: header
+      schema:
+        type: string
+      description: |
+        If this field is filled the TPP solution will try to
+        retrieve previously stored information to complete the
+        payment:
+        * preferred bank of the Psu, if filled it will used to fill the AspspId.
+        * preferred bank account.
+        * check for a pre authentication token in case pre-authentication is available for the ASPSP.
+        * check for debtor token in case of IDEAL payments
+
+    LastLogin:
+      name: LastLogin
+      in: header
+      description: |
+        Psu Session information.
+
+        The time when the Psu last logged in with the TPP. ISO 8601 DateTime.
+      schema:
+        type: string
+        format: date-time
+
+    PsuIpAddress:
+      name: PsuIpAddress
+      in: header
+      description: |
+        Psu Session information.
+
+        The forwarded IP Address header field consists of the corresponding
+        HTTP request IP Address field between Psu and TPP . It shall be
+        contained if and only if this request was actively initiated by the
+        Psu.
+      schema:
+        maxLength: 35
+        minLength: 1
+        type: string
+
+    PsuIpPort:
+      name: PsuIpPort
+      in: header
+      description: |
+        Psu Session information.
+
+        The forwarded IP Port header field consists of the corresponding
+        HTTP request IP Port field between Psu and TPP, if available.
+      schema:
+        maxLength: 5
+        minLength: 1
+        type: string
+
+    HttpMethod:
+      name: HttpMethod
+      in: header
+      description: |
+        Psu Session information.
+
+        HTTP method used at the Psu-TPP interface. Available values - GET,
+        POST, PUT, DELETE.
+      schema:
+        maxLength: 6
+        minLength: 3
+        type: string
+
+    HttpHeaderUserAgent:
+      name: HttpHeaderUserAgent
+      in: header
+      description: |
+        Psu Session information.
+
+        The forwarded Agent header field of the HTTP request between Psu
+        and TPP.
+
+        Required if
+        * the `PaymentProduct`equals `IDEAL`
+        * `PsuId`is provided
+        * `UseDebtorToken` does not equal `false`
+      schema:
+        maxLength: 500
+        minLength: 1
+        type: string
+
+    HttpHeaderReferer:
+      name: HttpHeaderReferer
+      in: header
+      description: |
+        Psu Session information.
+      schema:
+        maxLength: 500
+        minLength: 1
+        type: string
+
+    HttpHeaderAccept:
+      name: HttpHeaderAccept
+      in: header
+      description: |
+        Psu Session information.
+
+        The forwarded IP Accept header fields consist of the corresponding
+        HTTP request Accept header fields between Psu and TPP.
+      schema:
+        maxLength: 500
+        minLength: 1
+        type: string
+
+    HttpHeaderAcceptCharset:
+      name: HttpHeaderAcceptCharset
+      in: header
+      description: |
+        Psu Session information.
+
+        The forwarded IP Accept header fields consist of the corresponding
+        HTTP request Accept header fields between Psu and TPP.
+      schema:
+        maxLength: 500
+        minLength: 1
+        type: string
+
+    HttpHeaderAcceptEncoding:
+      name: HttpHeaderAcceptEncoding
+      in: header
+      description: |
+        Psu Session information.
+
+        The forwarded IP Accept header fields consist of the corresponding
+        HTTP request Accept header fields between Psu and TPP.
+      schema:
+        maxLength: 500
+        minLength: 1
+        type: string
+
+    HttpHeaderAcceptLanguage:
+      name: HttpHeaderAcceptLanguage
+      in: header
+      description: |
+        Psu Session information.
+
+        The forwarded IP Accept header fields consist of the corresponding
+        HTTP request Accept header fields between Psu and TPP.
+      schema:
+        maxLength: 500
+        minLength: 1
+        type: string
+
+    DeviceId:
+      name: DeviceId
+      in: header
+      description: |
+        UUID (Universally Unique Identifier) for a device, which is used by
+        the Psu. UUID identifies either a device or a device dependant
+        application installation. In case of an installation identification
+        this ID need to be unaltered until removal from device.
+      schema:
+        maxLength: 500
+        minLength: 1
+        type: string
+
+    GeoLocation:
+      name: GeoLocation
+      in: header
+      description: |
+        The forwarded Geo Location of the corresponding http request
+        between Psu and TPP.
+      schema:
+        maxLength: 500
+        minLength: 1
+        type: string
+
+    Signature:
+      name: Signature
+      in: header
+      description: |
+        Conditionally required for iDEAL payments. The signature in the request should include a keyId with the value of fingerprint of the certificate
+      schema:
+        type: string
+
+    Digest:
+      name: Digest
+      in: header
+      description: Is contained if and only if the `Signature` element is contained in the header of the request.
+      schema:
+        type: string
+      example: "SHA-256=hl1/Eps8BEQW58FJhDApwJXjGY4nr1ArGDHIT25vq6A="
+
+  responses:
+    400:
+      description: |
+        Bad Request
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+        MessageCreateDateTime:
+          $ref: '#/components/headers/MessageCreateDateTime'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    401:
+      description: |
+        Unauthorized
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+        MessageCreateDateTime:
+          $ref: '#/components/headers/MessageCreateDateTime'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    403:
+      description: |
+        Forbidden
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+        MessageCreateDateTime:
+          $ref: '#/components/headers/MessageCreateDateTime'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    404:
+      description: |
+        Not Found
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+        MessageCreateDateTime:
+          $ref: '#/components/headers/MessageCreateDateTime'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    500:
+      description: |
+        Internal Server Error
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+        MessageCreateDateTime:
+          $ref: '#/components/headers/MessageCreateDateTime'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    502:
+      description: |
+        Bad Gateway
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+        MessageCreateDateTime:
+          $ref: '#/components/headers/MessageCreateDateTime'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    503:
+      description: |
+        Service Unavailable'
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+        MessageCreateDateTime:
+          $ref: '#/components/headers/MessageCreateDateTime'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    511:
+      description: |
+        Network Authentication Required
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+        MessageCreateDateTime:
+          $ref: '#/components/headers/MessageCreateDateTime'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    204:
+      description: |
+        No Content
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+        MessageCreateDateTime:
+          $ref: '#/components/headers/MessageCreateDateTime'
+      content: {}
+    405:
+      description: |
+        Method not allowed
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+        MessageCreateDateTime:
+          $ref: '#/components/headers/MessageCreateDateTime'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

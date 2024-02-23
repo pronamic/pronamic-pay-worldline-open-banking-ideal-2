@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<ruleset name="Pronamic Pay - Worldline Open Banking - iDEAL 2.0">
+	<file>.</file>
+
+	<exclude-pattern type="relative">^build/*</exclude-pattern>
+	<exclude-pattern type="relative">^node_modules/*</exclude-pattern>
+	<exclude-pattern type="relative">^packages/*</exclude-pattern>
+	<exclude-pattern type="relative">^vendor/*</exclude-pattern>
+	<exclude-pattern type="relative">^wordpress/*</exclude-pattern>
+	<exclude-pattern type="relative">^wp-content/*</exclude-pattern>
+
+	<rule ref="PronamicWP">
+
+	</rule>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="pronamic-pay-worldline-open-banking-ideal-2" />
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.Utils.I18nTextDomainFixer">
+		<properties>
+			<property name="old_text_domain" type="array">
+				<element value="pronamic_ideal" />
+				<element value="pronamic-ideal" />
+				<element value="pronamic-pay-ideal-2" />
+			</property>
+
+			<property name="new_text_domain" value="pronamic-pay-worldline-open-banking-ideal-2" />
+		</properties>
+	</rule>
+</ruleset>

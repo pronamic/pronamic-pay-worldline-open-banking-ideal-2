@@ -1,0 +1,72 @@
+{
+	"name": "pronamic/pronamic-pay-worldline-open-banking-ideal-2",
+	"description": "This plugin contains the Pronamic Pay integration for the Worldline Open Banking Platform and iDEAL 2.0.",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"ideal",
+		"ideal-2",
+		"ideal-hub",
+		"msp",
+		"multi-service-platform",
+		"open-banking",
+		"open-banking-platform",
+		"open-banking-service",
+		"open-banking-services",
+		"payment",
+		"pronamic",
+		"pronamic-pay",
+		"rabobank",
+		"worldline",
+		"wordpress",
+		"wordpress-plugin"
+	],
+	"config": {
+		"allow-plugins": {
+			"roots/wordpress-core-installer": true,
+			"automattic/jetpack-autoloader": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"bamarni/composer-bin-plugin": true
+		},
+		"platform": {
+			"php": "8.0"
+		},
+		"platform-check": false,
+		"sort-packages": true,
+		"wp-slug": "pronamic-pay-worldline-open-banking-ideal-2"
+	},
+	"autoload": {
+		"psr-4": {
+			"Pronamic\\WordPress\\Pay\\Gateways\\WorldlineOpenBanking\\": "src/"
+		}
+	},
+	"require": {
+		"automattic/jetpack-autoloader": "^2.0 || ^3.0",
+		"pronamic/pronamic-wp-updater": "^1.0",
+		"pronamic/wp-http": "^1.2",
+		"wp-pay/core": "^4.15"
+	},
+	"require-dev": {
+		"automattic/wordbless": "^0.4.2",
+		"bamarni/composer-bin-plugin": "^1.8",
+		"pronamic/pronamic-cli": "^1.1",
+		"pronamic/wp-coding-standards": "^2.1"
+	},
+	"scripts": {
+		"phpcs": "vendor/bin/phpcs -s -v",
+		"build": "vendor/bin/pronamic wp-build",
+		"phpstan": "vendor/bin/phpstan analyse --memory-limit=-1",
+		"translate": [
+			"@build",
+			"rsync --recursive --delete --verbose ./build/project/languages/ ./languages/"
+		],
+		"version": [
+			"@build"
+		],
+		"release": [
+			"@build",
+			"vendor/bin/pronamic release-to-github",
+			"vendor/bin/pronamic release-to-pronamic"
+		]
+	}
+}
