@@ -64,7 +64,7 @@ add_filter(
 		$gateways[] = new \Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking\Integration(
 			[
 				'id'          => 'worldline-ideal-2-test',
-				'name'        => 'WorldLine - iDEAL 2.0 - Test',
+				'name'        => 'WorldLine - Rabo iDEAL Professional - iDEAL 2.0 - Test',
 				'mode'        => 'test',
 				'base_domain' => 'https://digitalroutingservice.awltest.de',
 				'app'         => 'IDEAL',
