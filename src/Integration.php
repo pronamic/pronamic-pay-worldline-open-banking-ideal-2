@@ -291,7 +291,7 @@ final class Integration extends AbstractGatewayIntegration {
 			'group'    => 'pk-cert',
 			'title'    => __( 'Private Key', 'pronamic-pay-worldline-open-banking-ideal-2' ),
 			'meta_key' => PronamicGateway::MODE_TEST === $this->get_mode() ? null : '_pronamic_gateway_ideal_private_key',
-			'value'    => PronamicGateway::MODE_TEST === $this->get_mode() ? trim( (string) \file_get_contents( __DIR__ . '/../tests/TestCertificatesiDEAL.2.0.key', true ) ) : '',
+			'value'    => PronamicGateway::MODE_TEST === $this->get_mode() ? trim( (string) \file_get_contents( __DIR__ . '/../certificates/TestCertificatesiDEAL.2.0.key', true ) ) : '',
 			'readonly' => PronamicGateway::MODE_TEST === $this->get_mode(),
 			'type'     => 'textarea',
 			'callback' => [ $this, 'field_private_key' ],
@@ -305,7 +305,7 @@ final class Integration extends AbstractGatewayIntegration {
 			'group'    => 'pk-cert',
 			'title'    => __( 'Certificate', 'pronamic-pay-worldline-open-banking-ideal-2' ),
 			'meta_key' => PronamicGateway::MODE_TEST === $this->get_mode() ? null : '_pronamic_gateway_ideal_private_certificate',
-			'value'    => PronamicGateway::MODE_TEST === $this->get_mode() ? trim( (string) \file_get_contents( __DIR__ . '/../tests/TestCertificatesiDEAL.2.0.pem', true ) ) : '',
+			'value'    => PronamicGateway::MODE_TEST === $this->get_mode() ? trim( (string) \file_get_contents( __DIR__ . '/../certificates/TestCertificatesiDEAL.2.0.pem', true ) ) : '',
 			'readonly' => PronamicGateway::MODE_TEST === $this->get_mode(),
 			'type'     => 'textarea',
 			'callback' => [ $this, 'field_certificate' ],
@@ -378,7 +378,7 @@ final class Integration extends AbstractGatewayIntegration {
 		$number_days_valid    = $this->get_meta( $post_id, 'number_days_valid' );
 
 		if ( PronamicGateway::MODE_TEST === $this->get_mode() ) {
-			$private_key = \file_get_contents( __DIR__ . '/../tests/TestCertificatesiDEAL.2.0.key' );
+			$private_key = \file_get_contents( __DIR__ . '/../certificates/TestCertificatesiDEAL.2.0.key' );
 		}
 
 		if ( PronamicGateway::MODE_TEST !== $this->get_mode() ) {
@@ -449,7 +449,7 @@ final class Integration extends AbstractGatewayIntegration {
 		$certificate = $this->get_meta( $post_id, 'ideal_private_certificate' );
 
 		if ( PronamicGateway::MODE_TEST === $this->get_mode() ) {
-			$certificate = \file_get_contents( __DIR__ . '/../tests/TestCertificatesiDEAL.2.0.pem' );
+			$certificate = \file_get_contents( __DIR__ . '/../certificates/TestCertificatesiDEAL.2.0.pem' );
 		}
 
 		if ( PronamicGateway::MODE_TEST !== $this->get_mode() ) {
@@ -805,9 +805,9 @@ final class Integration extends AbstractGatewayIntegration {
 
 		if ( PronamicGateway::MODE_TEST === $mode ) {
 			$merchant_id          = ( '' === $merchant_id ) ? '002881' : $merchant_id;
-			$private_key          = (string) \file_get_contents( __DIR__ . '/../tests/TestCertificatesiDEAL.2.0.key', true );
+			$private_key          = (string) \file_get_contents( __DIR__ . '/../certificates/TestCertificatesiDEAL.2.0.key', true );
 			$private_key_password = '';
-			$certificate          = (string) \file_get_contents( __DIR__ . '/../tests/TestCertificatesiDEAL.2.0.pem', true );
+			$certificate          = (string) \file_get_contents( __DIR__ . '/../certificates/TestCertificatesiDEAL.2.0.pem', true );
 		}
 
 		$id = ( '' === $sub_id ) ? $merchant_id : $merchant_id . ':' . $sub_id;
