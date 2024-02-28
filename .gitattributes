@@ -1,6 +1,6 @@
 *.http text eol=crlf
 
-/..editorconfig    export-ignore
+/.editorconfig     export-ignore
 /.gitattributes    export-ignore
 /.gitignore        export-ignore
 /.wp-env.json      export-ignore
