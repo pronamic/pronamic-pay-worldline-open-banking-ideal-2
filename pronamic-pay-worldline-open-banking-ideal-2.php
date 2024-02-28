@@ -42,18 +42,22 @@ add_filter(
 		// ABN AMRO.
 		$gateways[] = new \Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking\Integration(
 			[
-				'id'          => 'abn-amro-ideal-2-test',
-				'name'        => 'ABN AMRO - iDEAL Zelfbouw - iDEAL 2.0 - Test',
-				'mode'        => 'test',
-				'base_domain' => 'https://digitalroutingservice.awltest.de',
-				'app'         => 'IDEAL',
-				'client'      => 'ABN',
+				'id'               => 'abn-amro-ideal-2-test',
+				'name'             => 'ABN AMRO - iDEAL Zelfbouw - iDEAL 2.0 - Test',
+				'mode'             => 'test',
+				'base_domain'      => 'https://digitalroutingservice.awltest.de',
+				'app'              => 'IDEAL',
+				'client'           => 'ABN',
+				'merchant_options' => [
+					'202020'   => 'Test Merchant A',
+					'20202020' => 'Test Merchant B',
+				],
 			]
 		);
 
 		$gateways[] = new \Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking\Integration(
 			[
-				'id'          => 'abn-amro-ideal-2-test',
+				'id'          => 'abn-amro-ideal-2',
 				'name'        => 'ABN AMRO - iDEAL Zelfbouw - iDEAL 2.0',
 				'mode'        => 'live',
 				'base_domain' => 'https://ecommerce.abnamro.nl',
@@ -65,12 +69,16 @@ add_filter(
 		// Rabobank.
 		$gateways[] = new \Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking\Integration(
 			[
-				'id'          => 'rabobank-ideal-2-test',
-				'name'        => 'Rabobank - Rabo iDEAL Professional - iDEAL 2.0 - Test',
-				'mode'        => 'test',
-				'base_domain' => 'https://routingservice-rabo.awltest.de',
-				'app'         => 'IDEAL',
-				'client'      => 'RaboiDEAL',
+				'id'               => 'rabobank-ideal-2-test',
+				'name'             => 'Rabobank - Rabo iDEAL Professional - iDEAL 2.0 - Test',
+				'mode'             => 'test',
+				'base_domain'      => 'https://routingservice-rabo.awltest.de',
+				'app'              => 'IDEAL',
+				'client'           => 'RaboiDEAL',
+				'merchant_options' => [
+					'002881' => 'Test Merchant A',
+					'002882' => 'Test Merchant B',
+				],
 			]
 		);
 
@@ -87,12 +95,16 @@ add_filter(
 
 		$gateways[] = new \Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking\Integration(
 			[
-				'id'          => 'worldline-ideal-2-test',
-				'name'        => 'WorldLine - Rabo iDEAL Professional - iDEAL 2.0 - Test',
-				'mode'        => 'test',
-				'base_domain' => 'https://digitalroutingservice.awltest.de',
-				'app'         => 'IDEAL',
-				'client'      => 'RaboiDEAL',
+				'id'               => 'worldline-rabobank-ideal-2-test',
+				'name'             => 'WorldLine - Rabo iDEAL Professional - iDEAL 2.0 - Test',
+				'mode'             => 'test',
+				'base_domain'      => 'https://digitalroutingservice.awltest.de',
+				'app'              => 'IDEAL',
+				'client'           => 'RaboiDEAL',
+				'merchant_options' => [
+					'002881' => 'Test Merchant A',
+					'002882' => 'Test Merchant B',
+				],
 			]
 		);
 

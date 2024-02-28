@@ -40,6 +40,13 @@ final class Integration extends AbstractGatewayIntegration {
 	private $service_client;
 
 	/**
+	 * Merchant options.
+	 * 
+	 * @var array<string, string>|null
+	 */
+	private $merchant_options;
+
+	/**
 	 * Construct iDEAL 2.0 integration.
 	 *
 	 * @param array<string, mixed> $args Arguments.
@@ -72,6 +79,10 @@ final class Integration extends AbstractGatewayIntegration {
 		$this->service_base_domain = $args['base_domain'];
 		$this->service_client      = $args['client'];
 
+		if ( \array_key_exists( 'merchant_options', $args ) ) {
+			$this->merchant_options = $args['merchant_options'];
+		}
+
 		$this->set_mode( $args['mode'] );
 
 		\add_action( 'current_screen', [ $this, 'maybe_download_certificate' ] );
@@ -102,12 +113,9 @@ final class Integration extends AbstractGatewayIntegration {
 			),
 		];
 
-		if ( PronamicGateway::MODE_TEST === $this->get_mode() ) {
+		if ( null !== $this->merchant_options ) {
 			$merchant_field['type']    = 'select';
-			$merchant_field['options'] = [
-				'002881' => 'Test Merchant A',
-				'002882' => 'Test Merchant B',
-			];
+			$merchant_field['options'] = $this->merchant_options;
 		}
 
 		$fields[] = $merchant_field;
