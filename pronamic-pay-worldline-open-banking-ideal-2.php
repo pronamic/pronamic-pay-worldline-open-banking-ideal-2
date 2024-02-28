@@ -39,6 +39,30 @@ require_once __DIR__ . '/vendor/autoload_packages.php';
 add_filter(
 	'pronamic_pay_gateways',
 	function ( $gateways ) {
+		// ABN AMRO.
+		$gateways[] = new \Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking\Integration(
+			[
+				'id'          => 'abn-amro-ideal-2-test',
+				'name'        => 'ABN AMRO - iDEAL Zelfbouw - iDEAL 2.0 - Test',
+				'mode'        => 'test',
+				'base_domain' => 'https://digitalroutingservice.awltest.de',
+				'app'         => 'IDEAL',
+				'client'      => 'ABN',
+			]
+		);
+
+		$gateways[] = new \Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking\Integration(
+			[
+				'id'          => 'abn-amro-ideal-2-test',
+				'name'        => 'ABN AMRO - iDEAL Zelfbouw - iDEAL 2.0',
+				'mode'        => 'live',
+				'base_domain' => 'https://ecommerce.abnamro.nl',
+				'app'         => 'IDEAL',
+				'client'      => 'ABN',
+			]
+		);
+
+		// Rabobank.
 		$gateways[] = new \Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking\Integration(
 			[
 				'id'          => 'rabobank-ideal-2-test',
