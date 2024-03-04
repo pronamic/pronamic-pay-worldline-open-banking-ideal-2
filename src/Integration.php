@@ -824,7 +824,7 @@ final class Integration extends AbstractGatewayIntegration {
 			$certificate          = (string) \file_get_contents( __DIR__ . '/../certificates/TestCertificatesiDEAL.2.0.pem', true );
 		}
 
-		$id = ( '' === $sub_id ) ? $merchant_id : $merchant_id . ':' . $sub_id;
+		$id = ( '' === $sub_id || '0' === $sub_id ) ? $initiating_party_id : $initiating_party_id . ':' . $sub_id;
 
 		$config = new Config(
 			$this->service_base_domain,
