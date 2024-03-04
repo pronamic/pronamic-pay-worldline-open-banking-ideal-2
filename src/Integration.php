@@ -365,7 +365,7 @@ final class Integration extends AbstractGatewayIntegration {
 
 				\wp_nonce_field( 'pronamic_pay_download_certificate', 'pronamic_pay_download_certificate_nonce' );
 
-				submit_button(
+				\submit_button(
 					__( 'Download certificate', 'pronamic-pay-worldline-open-banking-ideal-2' ),
 					'secondary',
 					'download_certificate',
@@ -429,7 +429,7 @@ final class Integration extends AbstractGatewayIntegration {
 			if ( ! empty( $private_key ) ) {
 				\wp_nonce_field( 'pronamic_pay_download_secret_key', 'pronamic_pay_download_secret_key_nonce' );
 
-				submit_button(
+				\submit_button(
 					__( 'Download', 'pronamic-pay-worldline-open-banking-ideal-2' ),
 					'secondary',
 					'download_secret_key',
