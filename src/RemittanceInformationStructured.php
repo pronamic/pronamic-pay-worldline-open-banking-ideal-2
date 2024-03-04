@@ -18,14 +18,14 @@ use JsonSerializable;
 final class RemittanceInformationStructured implements JsonSerializable {
 	/**
 	 * Reference.
-	 * 
+	 *
 	 * @var string
 	 */
 	public string $reference;
 
 	/**
 	 * Construct remittance information structured.
-	 * 
+	 *
 	 * @param string $reference Reference.
 	 */
 	public function __construct( string $reference ) {
@@ -34,9 +34,10 @@ final class RemittanceInformationStructured implements JsonSerializable {
 
 	/**
 	 * JSON serialize.
-	 * 
+	 *
 	 * @return object
 	 */
+	#[\ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return (object) [
 			'Reference' => $this->reference,

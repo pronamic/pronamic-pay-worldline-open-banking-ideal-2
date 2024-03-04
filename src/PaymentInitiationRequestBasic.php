@@ -18,28 +18,28 @@ use JsonSerializable;
 final class PaymentInitiationRequestBasic implements JsonSerializable {
 	/**
 	 * Amount.
-	 * 
+	 *
 	 * @var string
 	 */
 	public string $amount;
 
 	/**
 	 * Remittance information.
-	 * 
+	 *
 	 * @var string|null
 	 */
 	public $remittance_information;
 
 	/**
 	 * Remittance information structured.
-	 * 
+	 *
 	 * @var RemittanceInformationStructured|null
 	 */
 	public $remittance_information_structured;
 
 	/**
 	 * Construct payment initiation request basic.
-	 * 
+	 *
 	 * @param string $amount Amount.
 	 */
 	public function __construct( string $amount ) {
@@ -48,9 +48,10 @@ final class PaymentInitiationRequestBasic implements JsonSerializable {
 
 	/**
 	 * JSON serialize.
-	 * 
+	 *
 	 * @return object
 	 */
+	#[\ReturnTypeWillChange]
 	public function jsonSerialize() {
 		$data = [
 			'Amount' => [

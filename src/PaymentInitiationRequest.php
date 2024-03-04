@@ -26,13 +26,13 @@ final class PaymentInitiationRequest extends Request implements JsonSerializable
 
 	/**
 	 * The callback URL for the redirection back to the initiating party after authorization.
-	 * 
+	 *
 	 * This is equivalent to the Merchant Return URL from iDEAL 1.0. This is the URL where
 	 * the User is returned to once the payment has been completed. There is an option to
 	 * provide this in the MSP Portal, or as an alternative to be provided in the API request.
 	 * The value provided in the API request will take precedence to the value in the MSP
 	 * Portal.
-	 * 
+	 *
 	 * @link https://financial-services.developer.worldline.com/node/274#operation/paymentInitiate
 	 * @var string|null
 	 */
@@ -83,9 +83,10 @@ final class PaymentInitiationRequest extends Request implements JsonSerializable
 
 	/**
 	 * JSON serialize.
-	 * 
+	 *
 	 * @return object
 	 */
+	#[\ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return (object) [
 			'PaymentProduct'    => [

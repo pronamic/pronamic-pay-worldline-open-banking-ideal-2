@@ -52,9 +52,10 @@ final class TokenResponse implements JsonSerializable {
 
 	/**
 	 * JSON serialize.
-	 * 
+	 *
 	 * @return object
 	 */
+	#[\ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return (object) [
 			'access_token' => $this->access_token,
@@ -65,7 +66,7 @@ final class TokenResponse implements JsonSerializable {
 
 	/**
 	 * Create token response from object.
-	 * 
+	 *
 	 * @param object $data Object.
 	 * @return self
 	 */
