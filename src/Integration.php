@@ -819,7 +819,6 @@ final class Integration extends AbstractGatewayIntegration {
 		$certificate          = (string) $this->get_meta( $post_id, 'ideal_private_certificate' );
 
 		if ( PronamicGateway::MODE_TEST === $mode ) {
-			$merchant_id          = ( '' === $merchant_id ) ? '002881' : $merchant_id;
 			$private_key          = (string) \file_get_contents( __DIR__ . '/../certificates/TestCertificatesiDEAL.2.0.key', true );
 			$private_key_password = '';
 			$certificate          = (string) \file_get_contents( __DIR__ . '/../certificates/TestCertificatesiDEAL.2.0.pem', true );
