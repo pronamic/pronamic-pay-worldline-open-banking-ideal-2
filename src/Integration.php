@@ -132,7 +132,6 @@ final class Integration extends AbstractGatewayIntegration {
 		$fields[] = [
 			'section'  => 'advanced',
 			'meta_key' => '_pronamic_gateway_ideal_sub_id',
-			'name'     => 'subId',
 			'id'       => 'pronamic_ideal_sub_id',
 			'title'    => __( 'Sub ID', 'pronamic-pay-worldline-open-banking-ideal-2' ),
 			'type'     => 'text',
