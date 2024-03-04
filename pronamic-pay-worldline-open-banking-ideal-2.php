@@ -42,13 +42,14 @@ add_filter(
 		// ABN AMRO.
 		$gateways[] = new \Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking\Integration(
 			[
-				'id'               => 'abn-amro-ideal-2-test',
-				'name'             => 'ABN AMRO - iDEAL Zelfbouw - iDEAL 2.0 - Test',
-				'mode'             => 'test',
-				'base_domain'      => 'https://digitalroutingservice.awltest.de',
-				'app'              => 'IDEAL',
-				'client'           => 'ABN',
-				'merchant_options' => [
+				'id'                     => 'abn-amro-ideal-2-test',
+				'name'                   => 'ABN AMRO - iDEAL Zelfbouw - iDEAL 2.0 - Test',
+				'mode'                   => 'test',
+				'base_domain'            => 'https://digitalroutingservice.awltest.de',
+				'app'                    => 'IDEAL',
+				'client'                 => 'ABN',
+				'initiating_party_label' => __( 'BC number', 'pronamic-pay-worldline-open-banking-ideal-2' ),
+				'merchant_options'       => [
 					'202020'   => 'Test Merchant A',
 					'20202020' => 'Test Merchant B',
 				],
@@ -57,25 +58,27 @@ add_filter(
 
 		$gateways[] = new \Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking\Integration(
 			[
-				'id'          => 'abn-amro-ideal-2',
-				'name'        => 'ABN AMRO - iDEAL Zelfbouw - iDEAL 2.0',
-				'mode'        => 'live',
-				'base_domain' => 'https://ecommerce.abnamro.nl',
-				'app'         => 'IDEAL',
-				'client'      => 'ABN',
+				'id'                     => 'abn-amro-ideal-2',
+				'name'                   => 'ABN AMRO - iDEAL Zelfbouw - iDEAL 2.0',
+				'mode'                   => 'live',
+				'base_domain'            => 'https://ecommerce.abnamro.nl',
+				'app'                    => 'IDEAL',
+				'client'                 => 'ABN',
+				'initiating_party_label' => __( 'BC number', 'pronamic-pay-worldline-open-banking-ideal-2' ),
 			]
 		);
 
 		// Rabobank.
 		$gateways[] = new \Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking\Integration(
 			[
-				'id'               => 'rabobank-ideal-2-test',
-				'name'             => 'Rabobank - Rabo iDEAL Professional - iDEAL 2.0 - Test',
-				'mode'             => 'test',
-				'base_domain'      => 'https://routingservice-rabo.awltest.de',
-				'app'              => 'IDEAL',
-				'client'           => 'RaboiDEAL',
-				'merchant_options' => [
+				'id'                     => 'rabobank-ideal-2-test',
+				'name'                   => 'Rabobank - Rabo iDEAL Professional - iDEAL 2.0 - Test',
+				'mode'                   => 'test',
+				'base_domain'            => 'https://routingservice-rabo.awltest.de',
+				'app'                    => 'IDEAL',
+				'client'                 => 'RaboiDEAL',
+				'initiating_party_label' => __( 'Dashboard ID', 'pronamic-pay-worldline-open-banking-ideal-2' ),
+				'merchant_options'       => [
 					'002881' => 'Test Merchant A',
 					'002882' => 'Test Merchant B',
 				],
@@ -84,24 +87,26 @@ add_filter(
 
 		$gateways[] = new \Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking\Integration(
 			[
-				'id'          => 'rabobank-ideal-2',
-				'name'        => 'Rabobank - Rabo iDEAL Professional - iDEAL 2.0',
-				'mode'        => 'live',
-				'base_domain' => 'https://ideal.rabobank.nl',
-				'app'         => 'IDEAL',
-				'client'      => 'RaboiDEAL',
+				'id'                     => 'rabobank-ideal-2',
+				'name'                   => 'Rabobank - Rabo iDEAL Professional - iDEAL 2.0',
+				'mode'                   => 'live',
+				'base_domain'            => 'https://ideal.rabobank.nl',
+				'app'                    => 'IDEAL',
+				'client'                 => 'RaboiDEAL',
+				'initiating_party_label' => __( 'Dashboard ID', 'pronamic-pay-worldline-open-banking-ideal-2' ),
 			]
 		);
 
 		$gateways[] = new \Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking\Integration(
 			[
-				'id'               => 'worldline-rabobank-ideal-2-test',
-				'name'             => 'Worldline - Rabo iDEAL Professional - iDEAL 2.0 - Test',
-				'mode'             => 'test',
-				'base_domain'      => 'https://digitalroutingservice.awltest.de',
-				'app'              => 'IDEAL',
-				'client'           => 'RaboiDEAL',
-				'merchant_options' => [
+				'id'                     => 'worldline-rabobank-ideal-2-test',
+				'name'                   => 'Worldline - Rabo iDEAL Professional - iDEAL 2.0 - Test',
+				'mode'                   => 'test',
+				'base_domain'            => 'https://digitalroutingservice.awltest.de',
+				'app'                    => 'IDEAL',
+				'client'                 => 'RaboiDEAL',
+				'initiating_party_label' => __( 'Dashboard ID', 'pronamic-pay-worldline-open-banking-ideal-2' ),
+				'merchant_options'       => [
 					'002881' => 'Test Merchant A',
 					'002882' => 'Test Merchant B',
 				],

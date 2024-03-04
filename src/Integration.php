@@ -40,8 +40,15 @@ final class Integration extends AbstractGatewayIntegration {
 	private $service_client;
 
 	/**
+	 * Initiating Party ID label.
+	 *
+	 * @var string|null
+	 */
+	private $initiating_party_label;
+
+	/**
 	 * Merchant options.
-	 * 
+	 *
 	 * @var array<string, string>|null
 	 */
 	private $merchant_options;
@@ -56,18 +63,19 @@ final class Integration extends AbstractGatewayIntegration {
 		$args = wp_parse_args(
 			$args,
 			[
-				'id'            => 'ideal-2',
-				'name'          => 'iDEAL 2.0',
-				'mode'          => PronamicGateway::MODE_LIVE,
-				'url'           => \__( 'https://www.ideal.nl/en/', 'pronamic-pay-worldline-open-banking-ideal-2' ),
-				'product_url'   => \__( 'https://www.ideal.nl/en/', 'pronamic-pay-worldline-open-banking-ideal-2' ),
-				'manual_url'    => null,
-				'dashboard_url' => null,
-				'provider'      => null,
-				'app'           => null,
-				'base_url'      => null,
-				'client'        => null,
-				'supports'      => [
+				'id'                     => 'ideal-2',
+				'name'                   => 'iDEAL 2.0',
+				'mode'                   => PronamicGateway::MODE_LIVE,
+				'url'                    => \__( 'https://www.ideal.nl/en/', 'pronamic-pay-worldline-open-banking-ideal-2' ),
+				'product_url'            => \__( 'https://www.ideal.nl/en/', 'pronamic-pay-worldline-open-banking-ideal-2' ),
+				'manual_url'             => null,
+				'dashboard_url'          => null,
+				'provider'               => null,
+				'app'                    => null,
+				'base_url'               => null,
+				'client'                 => null,
+				'initiating_party_label' => null,
+				'supports'               => [
 					'payment_status_request',
 				],
 			]
@@ -78,6 +86,10 @@ final class Integration extends AbstractGatewayIntegration {
 		$this->service_app         = $args['app'];
 		$this->service_base_domain = $args['base_domain'];
 		$this->service_client      = $args['client'];
+
+		if ( \is_string( $args['initiating_party_label'] ) ) {
+			$this->initiating_party_label = $args['initiating_party_label'];
+		}
 
 		if ( \array_key_exists( 'merchant_options', $args ) ) {
 			$this->merchant_options = $args['merchant_options'];
@@ -102,15 +114,11 @@ final class Integration extends AbstractGatewayIntegration {
 		// Merchant ID.
 		$merchant_field = [
 			'section'  => 'general',
-			'title'    => __( 'Merchant ID', 'pronamic-pay-worldline-open-banking-ideal-2' ),
-			'meta_key' => '_pronamic_gateway_ideal_merchant_id',
+			'title'    => null === $this->initiating_party_label ? \__( 'Initiating Party ID', 'pronamic-pay-worldline-open-banking-ideal-2' ) : $this->initiating_party_label,
+			'meta_key' => '_pronamic_gateway_worldline_initiating_party_id',
 			'type'     => 'text',
 			'classes'  => [ 'code' ],
-			'tooltip'  => sprintf(
-				'%s %s.',
-				__( 'Merchant ID (or Acceptant ID)', 'pronamic-pay-worldline-open-banking-ideal-2' ),
-				__( 'as mentioned in the payment provider dashboard', 'pronamic-pay-worldline-open-banking-ideal-2' )
-			),
+			'tooltip'  => \__( 'The parameter for Initiating Party ID as mentioned in the payment provider dashboard.', 'pronamic-pay-worldline-open-banking-ideal-2' ),
 		];
 
 		if ( null !== $this->merchant_options ) {
@@ -805,7 +813,7 @@ final class Integration extends AbstractGatewayIntegration {
 	public function get_config( $post_id ) {
 		$mode = $this->get_mode();
 
-		$merchant_id          = (string) $this->get_meta( $post_id, 'ideal_merchant_id' );
+		$initiating_party_id  = (string) $this->get_meta( $post_id, 'worldline_initiating_party_id' );
 		$sub_id               = (string) $this->get_meta( $post_id, 'ideal_sub_id' );
 		$private_key          = (string) $this->get_meta( $post_id, 'ideal_private_key' );
 		$private_key_password = (string) $this->get_meta( $post_id, 'ideal_private_key_password' );
