@@ -1,0 +1,87 @@
+# Pronamic build ignore
+/.pronamic-build-ignore
+
+# Git (https://git-scm.com/)
+/.git/
+/.gitignore
+/.gitattributes
+
+# .DS_Store (https://en.wikipedia.org/wiki/.DS_Store)
+.DS_Store
+
+# Documentation
+/documentation/
+
+# WordPress
+/wordpress/
+/wp-content/
+
+# WordPress.org assets
+/.wordpress-org/
+
+# Composer (https://getcomposer.org/)
+/vendor/
+
+# Composer bin plugin (https://github.com/bamarni/composer-bin-plugin)
+/vendor-bin/
+
+# Node.js (https://nodejs.org/)
+/node_modules/
+
+# pNpm (https://pnpm.io/)
+/pnpm-lock.yaml
+
+# IntelliJ's project specific settings files
+# @link https://github.com/github/gitignore/blob/master/Global/JetBrains.gitignore
+/.idea/
+
+# Visual Studio Code
+/.vscode/
+
+# JSHint (http://jshint.com/about/)
+/.jshintrc
+
+# GitHub
+/.github/
+
+# Grunt (https://gruntjs.com/)
+/Gruntfile.js
+
+# Nova (https://nova.app)
+/.nova/
+
+# PHP error logs
+/php_errors.log
+
+# PHP_CodeSniffer (https://github.com/squizlabs/PHP_CodeSniffer)
+/phpcs.xml.dist
+/phpcs.xml
+/phpcs-text-domain-fixer.xml
+
+# phpDocumentor (https://www.phpdoc.org/)
+/phpdoc.dist.xml
+/phpdoc.xml
+
+# PHP Mess Detector (https://phpmd.org/)
+/phpmd.ruleset.xml
+/phpmd.xml.dist
+/phpmd.xml
+
+# PHP Static Analysis Tool (https://github.com/phpstan/phpstan)
+/phpstan.neon.dist
+/phpstan.neon
+
+# PHPUnit (https://phpunit.de/)
+/phpunit.xml.dist
+/phpunit.xml
+
+# Psalm (https://github.com/vimeo/psalm)
+/psalm.xml.dist
+/psalm.xml
+
+# WP-CLI (https://wp-cli.org/)
+/wp-cli.yml
+
+# Project
+/build/
+/tests/
