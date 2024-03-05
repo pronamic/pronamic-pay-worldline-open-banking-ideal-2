@@ -104,6 +104,26 @@ final class Integration extends AbstractGatewayIntegration {
 	}
 
 	/**
+	 * Setup.
+	 */
+	public function setup() {
+		\add_filter( 'pronamic_gateway_configuration_display_value_' . $this->get_id(), [ $this, 'gateway_configuration_display_value' ], 10, 2 );
+	}
+
+	/**
+	 * Gateway configuration display value.
+	 *
+	 * @param string $display_value Display value.
+	 * @param int    $post_id       Gateway configuration post ID.
+	 * @return string
+	 */
+	public function gateway_configuration_display_value( $display_value, $post_id ) {
+		$initiating_party_id = (string) $this->get_meta( $post_id, 'worldline_initiating_party_id' );
+
+		return $initiating_party_id;
+	}
+
+	/**
 	 * Get settings fields.
 	 *
 	 * @return array<int, array<string, mixed>>>
