@@ -365,11 +365,10 @@ final class Integration extends AbstractGatewayIntegration {
 
 				\wp_nonce_field( 'pronamic_pay_download_certificate', 'pronamic_pay_download_certificate_nonce' );
 
-				\submit_button(
-					__( 'Download certificate', 'pronamic-pay-worldline-open-banking-ideal-2' ),
-					'secondary',
-					'download_certificate',
-					false
+				\printf(
+					'<input type="submit" id="%2$s" name="%2$s" value="%1$s" class="button" />',
+					\esc_attr( \__( 'Download certificate', 'pronamic-pay-worldline-open-banking-ideal-2' ) ),
+					\esc_attr( 'download_certificate' )
 				);
 
 				?>
@@ -429,11 +428,10 @@ final class Integration extends AbstractGatewayIntegration {
 			if ( ! empty( $private_key ) ) {
 				\wp_nonce_field( 'pronamic_pay_download_secret_key', 'pronamic_pay_download_secret_key_nonce' );
 
-				\submit_button(
-					__( 'Download', 'pronamic-pay-worldline-open-banking-ideal-2' ),
-					'secondary',
-					'download_secret_key',
-					false
+				\printf(
+					'<input type="submit" id="%2$s" name="%2$s" value="%1$s" class="button" />',
+					\esc_attr( \__( 'Download', 'pronamic-pay-worldline-open-banking-ideal-2' ) ),
+					\esc_attr( 'download_secret_key' )
 				);
 
 				echo ' ';
@@ -557,11 +555,11 @@ final class Integration extends AbstractGatewayIntegration {
 			if ( ! empty( $certificate ) ) {
 				\wp_nonce_field( 'pronamic_pay_download_certificate', 'pronamic_pay_download_certificate_nonce' );
 
-				\submit_button(
-					__( 'Download', 'pronamic-pay-worldline-open-banking-ideal-2' ),
-					'secondary',
-					'download_certificate',
-					false
+
+				\printf(
+					'<input type="submit" id="%2$s" name="%2$s" value="%1$s" class="button" />',
+					\esc_attr( \__( 'Download', 'pronamic-pay-worldline-open-banking-ideal-2' ) ),
+					\esc_attr( 'download_certificate' )
 				);
 
 				echo ' ';
