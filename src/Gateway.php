@@ -31,7 +31,7 @@ final class Gateway extends PronamicGateway {
 	protected $config;
 
 	/**
-	 * Constructs and initializes an iDEAL Advanced v3 gateway
+	 * Constructs and initializes an Wordline Open Banking gateway
 	 *
 	 * @param Config $config Config.
 	 */
