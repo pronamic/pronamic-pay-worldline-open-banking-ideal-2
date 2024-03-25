@@ -29,6 +29,13 @@ final class CommonPaymentDataResponse {
 	public $payment_id;
 
 	/**
+	 * Debtor information response.
+	 *
+	 * @var DebtorInformationResponse|null
+	 */
+	public $debtor_information;
+
+	/**
 	 * Construct payment initiation response.
 	 *
 	 * @param string $payment_status Payment status.
@@ -40,17 +47,23 @@ final class CommonPaymentDataResponse {
 	}
 
 	/**
-	 * Create token response from object.
-	 * 
+	 * Create common payment data response from object.
+	 *
 	 * @param object $data Object.
 	 * @return self
 	 */
 	public static function from_object( $data ) {
 		$object_access = new ObjectAccess( $data );
 
-		return new self(
+		$object = new self(
 			$object_access->get_string( 'PaymentStatus' ),
 			$object_access->get_string( 'PaymentId' ),
 		);
+
+		if ( $object_access->has_property( 'DebtorInformation' ) ) {
+			$object->debtor_information = DebtorInformationResponse::from_object( $object_access->get_property( 'DebtorInformation' ) );
+		}
+
+		return $object;
 	}
 }

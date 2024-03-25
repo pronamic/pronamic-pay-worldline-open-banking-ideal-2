@@ -124,5 +124,36 @@ final class Gateway extends PronamicGateway {
 		if ( null !== $status ) {
 			$payment->set_status( $status );
 		}
+
+		/**
+		 * Consumer bank details.
+		 */
+		$debtor_information = $payment_status_response->common_payment_data->debtor_information;
+
+		if ( null !== $debtor_information ) {
+			$consumer_bank_details = $payment->get_consumer_bank_details();
+
+			if ( null === $consumer_bank_details ) {
+				$consumer_bank_details = new BankAccountDetails();
+
+				$payment->set_consumer_bank_details( $consumer_bank_details );
+			}
+
+			$consumer_bank_details->set_name( $debtor_information->name );
+
+			$debtor_account = $debtor_information->account;
+
+			if ( null !== $debtor_account ) {
+				switch ( $debtor_account->scheme_name ) {
+					case 'IBAN':
+						$consumer_bank_details->set_iban( $debtor_account->identification );
+
+						break;
+					case 'SortCodeAccountNumber':
+					default:
+						$consumer_bank_details->set_account_number( $debtor_account->identification );
+				}
+			}
+		}
 	}
 }
