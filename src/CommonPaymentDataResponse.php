@@ -29,9 +29,9 @@ final class CommonPaymentDataResponse {
 	public $payment_id;
 
 	/**
-	 * Debtor information.
+	 * Debtor information response.
 	 *
-	 * @var DebtorInformation|null
+	 * @var DebtorInformationResponse|null
 	 */
 	public $debtor_information;
 
