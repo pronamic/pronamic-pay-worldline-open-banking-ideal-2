@@ -82,7 +82,10 @@ final class Gateway extends PronamicGateway {
 
 		$payment_initiation_response = $client->create_payment( $payment_initiation_request );
 
-		$payment->set_transaction_id( $payment_initiation_response->common_payment_data->payment_id );
+		$payment->set_meta( 'worldline_open_banking_payment_id', $payment_initiation_response->common_payment_data->payment_id );
+		$payment->set_meta( 'worldline_open_banking_aspsp_payment_id', $payment_initiation_response->common_payment_data->aspsp_payment_id );
+
+		$payment->set_transaction_id( $payment_initiation_response->common_payment_data->aspsp_payment_id );
 
 		if ( null !== $payment_initiation_response->links->redirect_url ) {
 			$redirect_url = $payment_initiation_response->links->redirect_url;
@@ -109,13 +112,13 @@ final class Gateway extends PronamicGateway {
 	public function update_status( Payment $payment ) {
 		$client = new Client( $this->config );
 
-		$transaction_id = $payment->get_transaction_id();
+		$worldline_payment_id = $payment->get_meta( 'worldline_open_banking_payment_id' );
 
-		if ( null === $transaction_id ) {
+		if ( null === $worldline_payment_id ) {
 			return;
 		}
 
-		$payment_status_request = new PaymentStatusRequest( $transaction_id );
+		$payment_status_request = new PaymentStatusRequest( $worldline_payment_id );
 
 		$payment_status_response = $client->get_payment_status( $payment_status_request );
 
