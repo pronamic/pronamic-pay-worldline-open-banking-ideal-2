@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2024-04-23
+
+### Changed
+
+- Use ID from ASPSP/iDEAL Hub as payment transaction ID. ([1d2e27d](https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2/commit/1d2e27d4a77e5382d4107f1fffed5c0f7b5b5596))
+
+### Composer
+
+- Changed `automattic/jetpack-autoloader` from `v3.0.4` to `v3.0.6`.
+	Release notes: https://github.com/Automattic/jetpack-autoloader/releases/tag/v3.0.6
+
+Full set of changes: [`1.0.0...1.1.0`][1.1.0]
+
+[1.1.0]: https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2/compare/v1.0.0...v1.1.0
+
 ## [1.0.0] - 2024-03-26
 
 - First relase.
