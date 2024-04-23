@@ -29,6 +29,13 @@ final class CommonPaymentDataResponse {
 	public $payment_id;
 
 	/**
+	 * ASPSP/iDEAL Hub Payment ID.
+	 *
+	 * @var string|null
+	 */
+	public $aspsp_payment_id;
+
+	/**
 	 * Debtor information response.
 	 *
 	 * @var DebtorInformationResponse|null
@@ -59,6 +66,10 @@ final class CommonPaymentDataResponse {
 			$object_access->get_string( 'PaymentStatus' ),
 			$object_access->get_string( 'PaymentId' ),
 		);
+
+		if ( $object_access->has_property( 'AspspPaymentId' ) ) {
+			$object->aspsp_payment_id = $object_access->get_string( 'AspspPaymentId' );
+		}
 
 		if ( $object_access->has_property( 'DebtorInformation' ) ) {
 			$object->debtor_information = DebtorInformationResponse::from_object( $object_access->get_property( 'DebtorInformation' ) );
