@@ -24,6 +24,13 @@ final class PaymentInitiationRequestBasic implements JsonSerializable {
 	public string $amount;
 
 	/**
+	 * Debtor information.
+	 *
+	 * @var DebtorInformation|null
+	 */
+	public $debtor_information;
+
+	/**
 	 * Remittance information.
 	 *
 	 * @var string|null
@@ -60,6 +67,10 @@ final class PaymentInitiationRequestBasic implements JsonSerializable {
 				'Currency' => 'EUR',
 			],
 		];
+
+		if ( null !== $this->debtor_information ) {
+			$data['DebtorInformation'] = $this->debtor_information;
+		}
 
 		if ( null !== $this->remittance_information ) {
 			$data['RemittanceInformation'] = $this->remittance_information;
