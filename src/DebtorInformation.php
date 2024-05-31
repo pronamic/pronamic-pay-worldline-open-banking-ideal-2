@@ -21,7 +21,7 @@ final class DebtorInformation implements JsonSerializable {
 	 *
 	 * @var string|null
 	 */
-	public ?string $agent;
+	public ?string $agent = null;
 
 	/**
 	 * JSON serialize.
@@ -30,8 +30,12 @@ final class DebtorInformation implements JsonSerializable {
 	 */
 	#[\ReturnTypeWillChange]
 	public function jsonSerialize() {
-		return (object) [
-			'Agent' => $this->agent,
-		];
+		$data = [];
+
+		if ( null !== $this->agent ) {
+			$data['Agent'] = $this->agent;
+		}
+
+		return (object) $data;
 	}
 }
