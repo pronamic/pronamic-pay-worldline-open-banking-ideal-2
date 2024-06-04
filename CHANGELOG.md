@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added temporary support for iDEAL issuers to help smooth migration to iDEAL 2.0. ([#7](https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2/issues/7))
+- Added support for iDEAL issuers to help smooth migration to iDEAL 2.0. ([#7](https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2/issues/7))
 
 ### Composer
 
