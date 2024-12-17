@@ -11,7 +11,7 @@
  * Plugin Name:       Pronamic Pay - Worldline Open Banking - iDEAL 2.0
  * Plugin URI:        https://wp.pronamic.directory/plugins/pronamic-pay-worldline-open-banking-ideal-2/
  * Description:       This plugin contains the Pronamic Pay integration for the Worldline Open Banking Platform and iDEAL 2.0.
- * Version:           1.2.0
+ * Version:           1.2.1
  * Requires at least: 6.2
  * Requires PHP:      8.0
  * Author:            Pronamic

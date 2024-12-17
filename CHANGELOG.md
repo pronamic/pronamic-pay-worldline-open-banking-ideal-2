@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2024-12-17
+
+### Commits
+
+- Created iDEAL_2.0_Getting_Started_Guide_-_version_1.5 - ABN AMRO.pdf ([d67de6a](https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2/commit/d67de6a98e88b7ef8ff40fe41b98d996bf115513))
+- Updated CHANGELOG.md ([0d96476](https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2/commit/0d96476c44c74d9303efeb4b9f379e8402544dfc))
+
+Full set of changes: [`1.2.0...1.2.1`][1.2.1]
+
+[1.2.1]: https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2/compare/v1.2.0...v1.2.1
+
 ## [1.2.0] - 2024-06-04
 
 ### Added
