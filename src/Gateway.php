@@ -10,15 +10,11 @@
 
 namespace Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking;
 
-use Pronamic\IDealIssuers\IDealIssuerService;
 use Pronamic\WordPress\Pay\Banks\BankAccountDetails;
 use Pronamic\WordPress\Pay\Core\Gateway as PronamicGateway;
 use Pronamic\WordPress\Pay\Core\ModeTrait;
 use Pronamic\WordPress\Pay\Core\PaymentMethod;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
-use Pronamic\WordPress\Pay\Fields\IDealIssuerSelectField;
-use Pronamic\WordPress\Pay\Fields\SelectFieldOption;
-use Pronamic\WordPress\Pay\Fields\SelectFieldOptionGroup;
 use Pronamic\WordPress\Pay\Payments\Payment;
 
 /**
@@ -53,31 +49,7 @@ final class Gateway extends PronamicGateway {
 		$ideal_payment_method = new PaymentMethod( PaymentMethods::IDEAL );
 		$ideal_payment_method->set_status( 'active' );
 
-		$field_ideal_issuer = new IDealIssuerSelectField( 'pronamic_pay_worldline_open_banking_ideal_issuer' );
-		$field_ideal_issuer->set_options( $this->get_ideal_issuers() );
-
-		$ideal_payment_method->add_field( $field_ideal_issuer );
-
 		$this->register_payment_method( $ideal_payment_method );
-	}
-
-	/**
-	 * Get iDEAL issuers.
-	 *
-	 * @return iterable<SelectFieldOption|SelectFieldOptionGroup>
-	 */
-	private function get_ideal_issuers() {
-		$ideal_issuer_service = new IDealIssuerService();
-
-		$issuers = $ideal_issuer_service->get_issuers();
-
-		$items = [];
-
-		foreach ( $issuers as $issuer ) {
-			$items[] = new SelectFieldOption( $issuer->code, $issuer->name );
-		}
-
-		return $items;
 	}
 
 	/**
@@ -102,16 +74,6 @@ final class Gateway extends PronamicGateway {
 
 		if ( '' !== $reference ) {
 			$common_payment_data->remittance_information_structured = new RemittanceInformationStructured( $reference );
-		}
-
-		$issuer = $payment->get_meta( 'issuer' );
-
-		if ( null !== $issuer && '' !== $issuer ) {
-			$debtor_information = new DebtorInformation();
-
-			$debtor_information->agent = $issuer;
-
-			$common_payment_data->debtor_information = $debtor_information;
 		}
 
 		$payment_initiation_request = new PaymentInitiationRequest( $common_payment_data );
