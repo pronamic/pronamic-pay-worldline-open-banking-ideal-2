@@ -78,7 +78,7 @@ final class Gateway extends PronamicGateway {
 
 		$payment_initiation_request = new PaymentInitiationRequest( $common_payment_data );
 
-		$payment_initiation_request->initiating_party_return_url = str_replace( 'pay.test', 'pay.reuel.nl', $payment->get_return_url() );
+		$payment_initiation_request->initiating_party_return_url = $payment->get_return_url();
 
 		$payment_initiation_response = $client->create_payment( $payment_initiation_request );
 
