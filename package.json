@@ -1,6 +1,6 @@
 {
 	"name": "@pronamic/pronamic-pay-worldline-open-banking-ideal-2",
-	"version": "1.2.1",
+	"version": "1.3.0",
 	"description": "This plugin contains the Pronamic Pay integration for the Worldline Open Banking Platform and iDEAL 2.0.",
 	"author": "Pronamic",
 	"license": "GPL-2.0-or-later",

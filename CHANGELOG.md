@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2025-06-19
+
+### Removed
+
+- Removed issuer field from iDEAL payment method. ([c656159](https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2/commit/c6561590938c28871ae817b9e2a1cc3e8eab15b3))
+
+### Composer
+
+- Removed `pronamic/ideal-issuers` `^1.0`.
+- Changed `automattic/jetpack-autoloader` from `v3.0.8` to `v3.1.3`.
+	Release notes: https://github.com/Automattic/jetpack-autoloader/releases/tag/v3.1.3
+- Changed `pronamic/wp-http` from `v1.2.3` to `v1.2.4`.
+	Release notes: https://github.com/pronamic/wp-http/releases/tag/v1.2.4
+- Changed `wp-pay/core` from `v4.18.0` to `v4.26.0`.
+	Release notes: https://github.com/pronamic/wp-pay-core/releases/tag/v4.26.0
+
+Full set of changes: [`1.2.1...1.3.0`][1.3.0]
+
+[1.3.0]: https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2/compare/v1.2.1...v1.3.0
+
 ## [1.2.1] - 2024-12-17
 
 ### Commits

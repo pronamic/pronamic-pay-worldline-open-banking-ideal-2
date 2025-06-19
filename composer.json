@@ -45,13 +45,15 @@
 		"automattic/jetpack-autoloader": "^2.0 || ^3.0",
 		"pronamic/pronamic-wp-updater": "^1.0",
 		"pronamic/wp-http": "^1.2",
-		"wp-pay/core": "^4.16"
+		"wp-pay/core": "^4.26"
 	},
 	"require-dev": {
 		"automattic/wordbless": "^0.4.2",
 		"bamarni/composer-bin-plugin": "^1.8",
 		"pronamic/pronamic-cli": "^1.1",
-		"pronamic/wp-coding-standards": "^2.2"
+		"pronamic/wp-coding-standards": "^2.2",
+		"wp-cli/dist-archive-command": "*",
+		"wp-cli/wp-cli-bundle": "*"
 	},
 	"scripts": {
 		"phpcs": "vendor/bin/phpcs -s -v",
