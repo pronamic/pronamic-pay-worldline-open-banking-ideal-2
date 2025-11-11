@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.2] - 2025-11-11
+
+### Commits
+
+- Added this point we shoud not use translation functions. ([5133e4b](https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2/commit/5133e4b7191ba4d056de5450a5d440f191a1883a))
+
+Full set of changes: [`1.3.1...1.3.2`][1.3.2]
+
+[1.3.2]: https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2/compare/v1.3.1...v1.3.2
+
 ## [1.3.1] - 2025-06-19
 
 ### Commits
