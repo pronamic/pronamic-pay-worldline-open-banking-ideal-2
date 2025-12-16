@@ -31,10 +31,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Autoload.
  */
-$autoload_file = __DIR__ . '/vendor/autoload_packages.php';
+$autoload_path = __DIR__ . '/vendor/autoload_packages.php';
 
-if ( file_exists( $autoload_file ) ) {
-	require_once $autoload_file;
+if ( file_exists( $autoload_path ) ) {
+	require_once $autoload_path;
 }
 
 /**
