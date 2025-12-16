@@ -31,7 +31,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Autoload.
  */
-require_once __DIR__ . '/vendor/autoload_packages.php';
+$autoload_file = __DIR__ . '/vendor/autoload_packages.php';
+
+if ( file_exists( $autoload_file ) ) {
+	require_once $autoload_file;
+}
 
 /**
  * Gateway.
