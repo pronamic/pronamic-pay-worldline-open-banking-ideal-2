@@ -3,7 +3,7 @@
  * Client
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2024 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking
  */
@@ -67,7 +67,7 @@ final class Client {
 
 	/**
 	 * Get URL.
-	 * 
+	 *
 	 * @param Request $request Request.
 	 * @return string
 	 */
@@ -112,7 +112,7 @@ final class Client {
 
 	/**
 	 * Request.
-	 * 
+	 *
 	 * @param Request $request Request.
 	 * @return Response
 	 */

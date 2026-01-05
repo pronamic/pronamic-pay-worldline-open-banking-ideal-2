@@ -3,7 +3,7 @@
  * Payment status request
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking
  */
@@ -18,7 +18,7 @@ use DateTimeImmutable;
 final class PaymentStatusRequest extends Request {
 	/**
 	 * Construct status request.
-	 * 
+	 *
 	 * @link https://financial-services.developer.worldline.com/node/274#operation/paymentStatus
 	 * @param string $payment_id Payment ID.
 	 */

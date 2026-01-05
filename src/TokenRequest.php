@@ -3,7 +3,7 @@
  * Token request
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking
  */
@@ -52,7 +52,7 @@ final class TokenRequest extends Request {
 
 	/**
 	 * Get headers.
-	 * 
+	 *
 	 * @return array<string, string>
 	 */
 	public function get_headers() {
@@ -66,7 +66,7 @@ final class TokenRequest extends Request {
 
 	/**
 	 * Get body.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_body() {

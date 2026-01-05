@@ -3,7 +3,7 @@
  * Config
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2024 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking
  */
@@ -19,28 +19,28 @@ use Pronamic\WordPress\Pay\Core\GatewayConfig;
 final class Config extends GatewayConfig implements JsonSerializable {
 	/**
 	 * Base domain.
-	 * 
+	 *
 	 * @var string
 	 */
 	public string $base_domain;
 
 	/**
 	 * App.
-	 * 
+	 *
 	 * @var string
 	 */
 	public string $app;
 
 	/**
 	 * Client.
-	 * 
+	 *
 	 * @var string
 	 */
 	public string $client;
 
 	/**
 	 * ID.
-	 * 
+	 *
 	 * @var string
 	 */
 	public string $id;
@@ -75,7 +75,7 @@ final class Config extends GatewayConfig implements JsonSerializable {
 
 	/**
 	 * Construct config.
-	 * 
+	 *
 	 * @param string $base_domain Base domain.
 	 * @param string $app         App.
 	 * @param string $client      Client.

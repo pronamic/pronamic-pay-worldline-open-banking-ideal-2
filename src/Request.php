@@ -3,7 +3,7 @@
  * Request
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking
  */
@@ -32,7 +32,7 @@ class Request {
 
 	/**
 	 * Request ID.
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $request_id;
@@ -60,7 +60,7 @@ class Request {
 
 	/**
 	 * Get headers.
-	 * 
+	 *
 	 * @return array<string, string>
 	 */
 	public function get_headers() {
@@ -69,7 +69,7 @@ class Request {
 
 	/**
 	 * Get request body.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_body() {
@@ -78,7 +78,7 @@ class Request {
 
 	/**
 	 * Get signatures headers.
-	 * 
+	 *
 	 * @return array<string, string>
 	 */
 	public function get_signature_headers() {
@@ -87,7 +87,7 @@ class Request {
 
 	/**
 	 * Get signature string.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_signature_string() {
@@ -102,7 +102,7 @@ class Request {
 
 	/**
 	 * Get digest.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_digest() {

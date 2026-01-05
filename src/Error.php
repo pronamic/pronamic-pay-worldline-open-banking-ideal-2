@@ -3,7 +3,7 @@
  * Error
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking
  */
@@ -30,7 +30,7 @@ final class Error extends \Exception {
 
 	/**
 	 * Details.
-	 * 
+	 *
 	 * @var string|null
 	 */
 	public $details;
@@ -55,7 +55,7 @@ final class Error extends \Exception {
 
 	/**
 	 * Create error from object.
-	 * 
+	 *
 	 * @param object $data Object.
 	 * @return self
 	 */
