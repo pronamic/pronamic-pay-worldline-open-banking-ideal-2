@@ -10,10 +10,8 @@
 
 namespace Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking;
 
-use OpenSSLAsymmetricKey;
 use Pronamic\WordPress\Http\Response;
 use Pronamic\WordPress\Http\Facades\Http;
-use Pronamic\WordPress\Pay\Gateways\IDealAdvancedV3\Certificate;
 
 /**
  * Client class
