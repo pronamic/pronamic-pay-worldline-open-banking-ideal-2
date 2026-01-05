@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-01-05
+
+### Commits
+
+- Removed unused use statements ([36df90b](https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2/commit/36df90bb3dc2c05dcad8b5a650ee6d6bcdaea126))
+- Improve or add support for Composer first WordPress setups, closes #12 ([d1b4091](https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2/commit/d1b4091a8a52d71d775b7821e168a2ac7cdc277a))
+
+### Composer
+
+- Changed `automattic/jetpack-autoloader` from `v5.0.7` to `v5.0.15`.
+	Release notes: https://github.com/Automattic/jetpack-autoloader/releases/tag/v5.0.15
+
+Full set of changes: [`1.3.2...1.4.0`][1.4.0]
+
+[1.4.0]: https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2/compare/v1.3.2...v1.4.0
+
 ## [1.3.2] - 2025-11-11
 
 ### Commits
