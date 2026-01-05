@@ -3,7 +3,7 @@
  * Pronamic Pay - Worldline Open Banking - iDEAL 2.0
  *
  * @author    Pronamic
- * @copyright 2024 Pronamic
+ * @copyright 2005-2026 Pronamic
  * @license   GPL-2.0-or-later
  * @package   Pronamic\WordPress\Pay\Gateways\WorldlineOpenBanking
  *
