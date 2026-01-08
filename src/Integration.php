@@ -622,9 +622,15 @@ final class Integration extends AbstractGatewayIntegration {
 			return;
 		}
 
-		$post_id = \sanitize_text_field( \wp_unslash( $_POST['post_ID'] ) );
+		$post_id = (int) \sanitize_text_field( \wp_unslash( $_POST['post_ID'] ) );
 
-		$config = $this->get_config( (int) $post_id );
+		$gateway_id = $this->get_meta( $post_id, 'id' );
+
+		if ( $gateway_id !== $this->get_id() ) {
+			return;
+		}
+
+		$config = $this->get_config( $post_id );
 
 		$filename = sprintf( 'ideal-certificate-%s.cer', $post_id );
 
