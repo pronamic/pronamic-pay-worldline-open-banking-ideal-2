@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-01-27
+
+### Commits
+
+- Check gateway ID on certificate download for correct certificate. ([20ffb14](https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2/commit/20ffb146764e722c63fcfe567b0c057d52f40da7))
+- Updated test certificates from https://ecommerce.abnamro.nl/ dashboard. ([9b46fa4](https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2/commit/9b46fa430587d30df8982f1cdb6785de18330e69))
+
+Full set of changes: [`1.4.0...1.5.0`][1.5.0]
+
+[1.5.0]: https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2/compare/v1.4.0...v1.5.0
+
 ## [1.4.0] - 2026-01-05
 
 ### Commits
