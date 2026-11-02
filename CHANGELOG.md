@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.1] - 2026-11-02
+
+### Composer
+
+- Changed `automattic/jetpack-autoloader` from `^2.0 || ^3.0 || ^4.0 || ^5.0` to `^2.0 || ^3.0 || ^4.0 || ^5.0 || ^6.0` to allow Jetpack Autoloader 6.x. Jetpack Autoloader 6.0.0 only raises its minimum PHP version to 7.4. The lock file keeps `v5.0.15`. Release notes: https://github.com/Automattic/jetpack-autoloader/blob/v6.0.0/CHANGELOG.md
+
+Full set of changes: [`1.5.0...1.5.1`][1.5.1]
+
+[1.5.1]: https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2/compare/v1.5.0...v1.5.1
+
 ## [1.5.0] - 2026-01-27
 
 ### Commits
