@@ -31,7 +31,7 @@
 		"url": "https://github.com/pronamic/pronamic-pay-worldline-open-banking-ideal-2/issues"
 	},
 	"devDependencies": {
-		"@wordpress/env": "^10.37.0",
+		"@wordpress/env": "^12.2.0",
 		"@wordpress/scripts": "^37.2.0"
 	},
 	"scripts": {
